@@ -1,75 +1,29 @@
-# React + TypeScript + Vite
+# HaoXueStudy
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Giao diện học tiếng Trung được xây dựng bằng React, TypeScript và Vite.
 
-Currently, two official plugins are available:
+## Chạy dự án
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Các lệnh `npm run build` và `npm run lint` dùng để kiểm tra build/TypeScript và quy tắc mã nguồn.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Cấu trúc mã nguồn
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```text
+src/
+├── app/                 # Khai báo router và ghép các trang
+├── features/
+│   ├── auth/            # Trang đăng nhập
+│   └── dashboard/       # Trang tổng quan và giao diện học tập
+├── shared/
+│   ├── assets/          # Tài nguyên dùng chung
+│   ├── lib/             # Tiện ích dùng chung, API client
+│   └── styles/          # CSS toàn cục
+└── main.tsx             # Điểm khởi chạy ứng dụng
 ```
+
+Dashboard nằm ở `/`. Các thao tác học tập yêu cầu đăng nhập và chuyển tới `/login`. Trang đăng nhập/đăng ký gọi các API `/auth/login`, `/auth/register` và xác thực access token với `/auth/me`. Backend mặc định chạy tại `http://localhost:3000`.

@@ -1,0 +1,73 @@
+.vocabulary-page{min-height:100vh;background:#f8f8f5;color:#30352e}
+.vocabulary-header{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,5vw,68px);background:#fff;border-bottom:1px solid #efefe9}
+.vocabulary-brand{display:flex;align-items:center;gap:10px;color:#292d27;font-family:Manrope,sans-serif;font-size:16px;font-weight:800;letter-spacing:-.5px}
+.vocabulary-brand>img{width:40px;height:40px;object-fit:cover;border-radius:50%}
+.vocabulary-brand>span>span{margin-left:4px;color:#769079}
+.vocabulary-back{display:flex;align-items:center;gap:7px;color:#667662;font-size:12px;font-weight:600}
+.vocabulary-back:hover{color:#244e3a}
+.vocabulary-content{width:min(100% - 48px,1280px);margin:0 auto;padding:36px 0 54px}
+.vocabulary-title-row{display:flex;align-items:flex-end;justify-content:space-between;gap:20px}
+.vocabulary-eyebrow{color:#82917f;font-size:9px;font-weight:700;letter-spacing:1.1px}
+.vocabulary-title-row h1{margin:8px 0 5px;color:#2d302a;font-family:Manrope,sans-serif;font-size:27px;letter-spacing:-.8px}
+.vocabulary-title-row p{margin:0;color:#85877e;font-size:12px}
+.vocabulary-total{display:flex;align-items:center;gap:8px;padding:10px 13px;border:1px solid #e9ece4;border-radius:9px;background:#fff;color:#6e816a;font-size:10px}
+.vocabulary-total strong{color:#3f5e43;font-size:14px}
+.vocabulary-filters{display:grid;grid-template-columns:minmax(240px,1fr) 185px;gap:11px;margin-top:25px}
+.vocabulary-search.ant-input-affix-wrapper,.vocabulary-filters .ant-select-selector{min-height:39px;border-color:#e8e9e2!important;border-radius:8px!important;background:#fff!important;box-shadow:none!important}
+.vocabulary-search.ant-input-affix-wrapper .ant-input{font-size:11px}
+.vocabulary-search .ant-input-prefix{margin-right:8px;color:#8b9687}
+.vocabulary-filters .ant-select{height:39px;font-size:11px}
+.vocabulary-categories{display:flex;align-items:center;gap:7px;overflow-x:auto;margin:14px 0 19px;padding-bottom:2px}
+.vocabulary-categories button{flex:0 0 auto;padding:7px 12px;border:1px solid #e8e9e2;border-radius:18px;background:#fff;color:#777c72;font-size:10px;transition:.16s}
+.vocabulary-categories button:hover{border-color:#bac9b5;color:#496749}
+.vocabulary-categories button.active{border-color:#315b3d;background:#315b3d;color:#fff}
+.vocabulary-workspace{display:grid;grid-template-columns:300px minmax(0,1fr);align-items:start;gap:16px}
+.vocabulary-list-card{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:hidden;border:1px solid #eaebe5;border-radius:11px;background:#fff}
+.vocabulary-list-heading{display:flex;align-items:center;justify-content:space-between;padding:14px 15px;border-bottom:1px solid #f0f1ec;color:#454a41;font-size:11px;font-weight:700}
+.vocabulary-list-heading span{min-width:21px;padding:3px 6px;border-radius:10px;background:#f0f4ed;color:#74876e;text-align:center;font-size:9px}
+.vocabulary-word-list{max-height:calc(100vh - 84px);overflow:auto;padding:5px}
+.vocabulary-word-row{display:flex;align-items:center;gap:10px;width:100%;padding:10px;border:0;border-radius:8px;background:#fff;text-align:left;transition:.15s}
+.vocabulary-word-row:hover{background:#f7f8f4}
+.vocabulary-word-row.selected{background:#edf3eb}
+.vocabulary-word-hanzi{min-width:55px;color:#355842;font-family:'Noto Serif SC',serif;font-size:20px;text-align:center}
+.vocabulary-word-copy{display:grid;min-width:0;flex:1;gap:3px}
+.vocabulary-word-copy strong{overflow:hidden;color:#454a41;font-size:10px;text-overflow:ellipsis;white-space:nowrap}
+.vocabulary-word-copy small{overflow:hidden;color:#92968c;font-size:9px;text-overflow:ellipsis;white-space:nowrap}
+.vocabulary-level{align-self:flex-start;padding:3px 5px;border-radius:8px;background:#f4f4ed;color:#888a7e;font-size:8px}
+.vocabulary-detail{display:grid;gap:13px;min-width:0}
+.vocabulary-word-card.ant-card,.vocabulary-examples-card.ant-card,.vocabulary-writing-card.ant-card{border:1px solid #e9ece5;border-radius:11px;background:#fff;box-shadow:none}
+.vocabulary-word-card.ant-card .ant-card-body{padding:21px 24px}
+.vocabulary-word-overview{display:grid;grid-template-columns:minmax(170px,.75fr) minmax(0,1fr);align-items:center;gap:25px}
+.vocabulary-word-main{display:flex;align-items:center;gap:17px}
+.vocabulary-detail-hanzi{color:#31563d;font-family:'Noto Serif SC',serif;font-size:46px;line-height:1.2}
+.vocabulary-pronunciations{display:grid;gap:5px}
+.vocabulary-pronunciations strong{color:#4d684d;font-size:12px}
+.vocabulary-pronunciations span{color:#8c9485;font-size:11px}
+.vocabulary-definition h2{margin:5px 0 10px;color:#353a32;font-size:17px;font-weight:700}
+.vocabulary-tags{display:flex;flex-wrap:wrap;gap:5px}
+.vocabulary-tags .ant-tag{margin:0;border-radius:12px;font-size:9px}
+.vocabulary-audio{display:block;width:min(100%,300px);height:32px;margin-top:15px}
+.vocabulary-detail-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(330px,1.12fr);align-items:start;gap:13px}
+.vocabulary-examples-card.ant-card .ant-card-head,.vocabulary-writing-card.ant-card .ant-card-head{min-height:46px;padding:0 17px;border-bottom:1px solid #f0f1ec}
+.vocabulary-examples-card.ant-card .ant-card-head-title,.vocabulary-writing-card.ant-card .ant-card-head-title{padding:13px 0;color:#454b41;font-size:11px}
+.vocabulary-examples-card.ant-card .ant-card-body,.vocabulary-writing-card.ant-card .ant-card-body{padding:14px}
+.vocabulary-examples{display:grid;gap:10px}
+.vocabulary-example{padding:12px;border-radius:9px;background:#f8f9f5}
+.vocabulary-example strong{display:block;color:#34523a;font-family:'Noto Serif SC',serif;font-size:17px}
+.vocabulary-example>span{display:block;margin-top:6px;color:#7d8c76;font-size:10px}
+.vocabulary-example>small{display:block;margin-top:4px;color:#9a9d93;font-size:9px}
+.vocabulary-example p{margin:8px 0 0;color:#646a60;font-size:10px}
+.vocabulary-example audio{width:100%;height:28px;margin-top:7px}
+.vocabulary-no-examples{margin:5px 0;color:#999d93;font-size:10px}
+.writing-title-zh{margin-right:7px;color:#7c9475;font-family:'Noto Serif SC',serif;font-size:14px}
+.vocabulary-character-tabs{display:flex;gap:6px;margin-bottom:10px}
+.vocabulary-character-tabs button{width:31px;height:31px;border:1px solid #e7ebe3;border-radius:7px;background:#fff;color:#668064;font-family:'Noto Serif SC',serif;font-size:16px}
+.vocabulary-character-tabs button.selected{border-color:#65845d;background:#edf3eb;color:#31563d}
+.vocabulary-loading,.vocabulary-empty{display:grid;justify-items:center;gap:12px;padding:70px 20px;border:1px solid #e9ece5;border-radius:11px;background:#fff;color:#81877c;font-size:12px}
+.vocabulary-empty>span{color:#668064;font-family:'Noto Serif SC',serif;font-size:23px}
+.vocabulary-empty h2{margin:0;color:#394036;font-size:16px}
+.vocabulary-empty p{margin:0;color:#8f938a;font-size:11px}
+.vocabulary-empty .ant-btn{margin-top:4px}
+.vocabulary-loading .ant-spin{margin:3px}
+@media(max-width:980px){.vocabulary-workspace{grid-template-columns:250px minmax(0,1fr)}.vocabulary-detail-grid{grid-template-columns:1fr}.vocabulary-writing-card{grid-row:1}.vocabulary-list-card{top:10px}.vocabulary-word-list{max-height:calc(100vh - 75px)}}
+@media(max-width:700px){.vocabulary-content{width:calc(100% - 28px);padding:25px 0 40px}.vocabulary-header{height:62px;padding:0 14px}.vocabulary-brand{font-size:14px}.vocabulary-brand>img{width:35px;height:35px}.vocabulary-back span{display:none}.vocabulary-title-row{align-items:flex-start}.vocabulary-title-row h1{font-size:23px}.vocabulary-title-row p{max-width:250px;line-height:1.5}.vocabulary-total{gap:5px;padding:8px;font-size:0}.vocabulary-total strong{font-size:12px}.vocabulary-total span{font-size:8px}.vocabulary-filters{grid-template-columns:minmax(0,1fr) 130px;gap:7px;margin-top:19px}.vocabulary-workspace{grid-template-columns:1fr}.vocabulary-list-card{position:static;max-height:none}.vocabulary-word-list{display:flex;max-height:150px;overflow:auto;gap:4px}.vocabulary-word-row{min-width:155px;width:155px;border:1px solid #f0f1ec}.vocabulary-word-overview{grid-template-columns:1fr;gap:15px}.vocabulary-word-card.ant-card .ant-card-body{padding:18px}.vocabulary-detail-hanzi{font-size:40px}}

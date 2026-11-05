@@ -1,0 +1,59 @@
+.login-page{min-height:100vh;display:grid;grid-template-columns:minmax(400px,1fr) minmax(400px,1fr);background:#fff}
+.login-card{width:min(100%,440px);padding:48px 42px;margin:auto}
+.login-brand{display:inline-flex;align-items:center;gap:10px;font-family:Manrope,sans-serif;font-size:17px;font-weight:800;letter-spacing:-.6px;color:#292d27}
+.login-brand img{width:42px;height:42px;object-fit:cover;border-radius:50%}
+.login-brand>span>span{color:#769079;margin-left:4px}
+.login-heading{margin-top:54px}
+.login-icon{width:42px;height:42px;border-radius:12px;background:#edf3ed;color:#41634b;display:grid;place-items:center;font-family:'Noto Serif SC',serif;font-size:22px}
+.login-eyebrow{margin:24px 0 8px;color:#82917f;font-size:10px;font-weight:700;letter-spacing:1.1px}
+.login-heading h1{margin:0;color:#2d302a;font-family:Manrope,sans-serif;font-size:26px;letter-spacing:-.8px}
+.login-heading>p:last-child{margin:10px 0 0;color:#85877e;font-size:13px;line-height:1.65}
+.login-form{display:grid;margin-top:30px}
+.login-form label{margin-bottom:8px;color:#45483f;font-size:12px;font-weight:600}
+.login-form input{height:44px;width:100%;padding:0 12px;border:1px solid #e8e9e2;border-radius:7px;outline:none;color:#34372f;font-size:13px}
+.login-form input:focus{border-color:#799276;box-shadow:0 0 0 3px #79927620}
+.login-form input::placeholder{color:#b0b1a9}
+.password-label{display:flex;align-items:center;justify-content:space-between;margin-top:19px}
+.password-label label{margin:0 0 8px}
+.password-label button{border:0;background:none;color:#547454;font-size:11px;padding:0 0 8px}
+.login-submit{height:44px;margin-top:23px;border:0;border-radius:7px;background:#244e3a;color:white;font-size:13px;font-weight:700}
+.login-submit:hover{background:#1d4030}
+.login-submit:disabled{cursor:wait;opacity:.72}
+.login-submit span{margin-left:10px}
+.login-message{margin:12px 0 0;color:#9b6048;font-size:12px;line-height:1.5}
+.login-footer{margin:25px 0 0;text-align:center;color:#8b8d84;font-size:12px}
+.login-mode-toggle{border:0;background:none;color:#537251;font-size:12px;font-weight:600;padding:0}
+.back-home{display:block;width:max-content;margin:27px auto 0;color:#7c8076;font-size:12px}
+.back-home:hover{color:#244e3a}
+.login-aside{display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:54px;background:#e9efe6}
+.login-aside:before,.login-aside:after{content:"";position:absolute;border:1px solid #cad7c6;border-radius:50%;width:480px;height:480px;right:-115px;top:calc(50% - 240px)}
+.login-aside:after{width:350px;height:350px;right:-50px;top:calc(50% - 175px);border-color:#d4dfd0}
+.login-aside-content{position:relative;z-index:1;max-width:430px}
+.login-aside-kicker{color:#6f856f;font-family:'Noto Serif SC',serif;font-size:13px;letter-spacing:1.5px}
+.login-aside h2{margin:22px 0 13px;color:#273b2d;font-family:Manrope,sans-serif;font-size:38px;line-height:1.3;letter-spacing:-1.3px}
+.login-aside h2 em{color:#7f9a75;font-family:'Noto Serif SC',serif;font-style:normal}
+.login-aside-content>p{max-width:360px;color:#758273;font-size:14px;line-height:1.8}
+.login-aside-note{display:flex;align-items:center;gap:12px;margin-top:46px}
+.login-aside-note>span{width:46px;height:46px;display:grid;place-items:center;border-radius:10px;background:white;color:#41634b;font-family:'Noto Serif SC',serif;font-size:24px;box-shadow:0 9px 23px #50674614}
+.login-aside-note div{display:grid;gap:4px}
+.login-aside-note strong{color:#465a48;font-size:12px}
+.login-aside-note small{color:#8a9686;font-size:11px}
+@media(max-width:800px){.login-page{grid-template-columns:1fr}.login-card{padding:38px 28px}.login-heading{margin-top:38px}.login-aside{display:none}}
+@media(max-width:420px){.login-card{padding:28px 22px}.login-heading h1{font-size:23px}}
+
+.password-input-wrap{position:relative;width:100%}
+.login-form .password-input-wrap input{padding-right:46px}
+.password-visibility{position:absolute;top:50%;right:9px;width:30px;height:30px;display:grid;place-items:center;transform:translateY(-50%);border:0;border-radius:6px;background:transparent;color:#858b7f}
+.password-visibility:hover{background:#f2f5ef;color:#41634b}
+.password-visibility svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+/* Ant Design components inherit the HaoXueStudy palette */
+.login-form .ant-input,.login-form .ant-input-affix-wrapper{min-height:44px;border-color:#e8e9e2;border-radius:7px;font-family:inherit;font-size:13px}
+.login-form .ant-input-affix-wrapper{padding:0 12px}
+.login-form .ant-input-affix-wrapper .ant-input{min-height:40px;border:0;box-shadow:none}
+.login-form .ant-input-affix-wrapper-focused,.login-form .ant-input:focus,.login-form .ant-input-focused{border-color:#799276;box-shadow:0 0 0 3px #79927620}
+.login-form .ant-input::placeholder,.login-form .ant-input-affix-wrapper input::placeholder{color:#b0b1a9}
+.login-submit.ant-btn{height:44px;margin-top:23px;border:0;border-radius:7px;background:#244e3a;color:#fff;font-size:13px;font-weight:700;box-shadow:none}
+.login-submit.ant-btn:hover{background:#1d4030!important}
+.login-alert{margin-top:12px;text-align:left}
+.password-label button{padding:0 0 8px}
