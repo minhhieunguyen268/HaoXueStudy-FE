@@ -1,7 +1,9 @@
 import axios from 'axios'
 import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { MessageCircle, Plus, Send, Sparkles, X } from 'lucide-react'
+import { Plus, Send, Sparkles, X } from 'lucide-react'
+import { Lottie } from 'lottie-react'
 import { getAssistantMessages, sendAssistantMessage, type AssistantMessage } from '../api/aiAssistantApi'
+import pandaMascot from '../../dashboard/assets/haoxue-panda-mascot.json'
 import '../styles/chat-assistant.css'
 
 interface ChatAssistantProps {
@@ -146,9 +148,8 @@ function ChatAssistant({ userId }: ChatAssistantProps) {
           <div className="ai-assistant-footnote">AI có thể trả lời chưa chính xác. Hãy kiểm tra ví dụ trước khi ghi nhớ.</div>
         </section>
       )}
-      <button type="button" className={`ai-assistant-launcher ${isOpen ? 'is-open' : ''}`} onClick={() => setIsOpen((open) => !open)} aria-label={isOpen ? 'Đóng trợ lý AI' : 'Mở trợ lý AI'}>
-        {isOpen ? <X size={21} aria-hidden="true" /> : <MessageCircle size={21} aria-hidden="true" />}
-        {!isOpen && <span>Trợ lý AI</span>}
+      <button type="button" className={`ai-assistant-launcher ${isOpen ? 'is-open' : ''}`} onClick={() => setIsOpen((open) => !open)} aria-label={isOpen ? 'Đóng trợ lý AI' : 'Mở trợ lý AI'} title={isOpen ? 'Đóng trợ lý AI' : 'Mở trợ lý AI'}>
+        {isOpen ? <X size={21} aria-hidden="true" /> : <Lottie className="ai-assistant-launcher-mascot" src={pandaMascot} loop autoplay aria-hidden="true" />}
       </button>
     </div>
   )

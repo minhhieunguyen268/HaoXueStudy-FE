@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Bell, CalendarDays, Clock3, Search } from 'lucide-react'
+import { Bell, CalendarDays, Search } from 'lucide-react'
 import AppLayout from '../../../shared/components/AppLayout'
 import UserAvatar from '../../../shared/components/UserAvatar'
+import PromotionalBannerCarousel from '../components/PromotionalBannerCarousel'
 import useAuthStore from '../../auth/authStore'
 
 const lessons = [
@@ -42,11 +43,7 @@ function DashboardPage() {
             <button className="week-button" onClick={() => requireLogin(() => setActive('Tổng quan'))}><CalendarDays aria-hidden="true" /> <span>Tuần này</span>⌄</button>
           </section>
 
-          <section className="hero-card">
-            <div className="hero-copy"><div className="hero-kicker"><span className="live-dot" /> HÀNH TRÌNH CỦA BẠN</div><h2>Mỗi ngày một chút,<br />tiếng Trung sẽ <em>thật gần.</em></h2><p>Học đều đặn hôm nay để tiến gần hơn đến mục tiêu của bạn.</p><button className="primary-button" onClick={() => requireLogin(() => setPlaying(true))}>{playing ? 'Đang mở bài học' : 'Tiếp tục học'} <span><ArrowRight aria-hidden="true" /></span></button></div>
-            <div className="hero-visual" aria-hidden="true"><div className="sun-shape" /><span className="orbit orbit-one" /><span className="orbit orbit-two" /><div className="character-card char-main"><span className="char-hanzi">學</span><span className="char-pinyin">xué · học</span></div><div className="character-card char-small"><span>好</span><small>hǎo</small></div><span className="hero-star star-a">✳</span><span className="hero-star star-b">✦</span><span className="hero-cloud">☁</span><span className="hero-caption">一點一滴 · từng chút một</span></div>
-            <div className="hero-count"><Clock3 aria-hidden="true" /> Hôm nay <strong>12 phút</strong></div>
-          </section>
+          <PromotionalBannerCarousel />
 
           <section className="stats-grid" aria-label="Tiến độ học tập">
             <article className="stat-card"><div className="stat-top"><span className="stat-icon flame">♨</span><span className="stat-change">↗ 2 ngày</span></div><strong className="stat-value">5 <small>ngày</small></strong><span className="stat-label">Chuỗi học liên tiếp</span><div className="mini-week"><i className="done">T2</i><i className="done">T3</i><i className="done">T4</i><i className="done">T5</i><i className="today">T6</i><i>T7</i><i>CN</i></div></article>

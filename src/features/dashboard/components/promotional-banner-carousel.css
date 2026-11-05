@@ -1,0 +1,62 @@
+.promo-carousel{position:relative;margin:0 0 17px;border-radius:15px;overflow:hidden;background:#eaf1e7;box-shadow:0 8px 24px #3b50370b;touch-action:pan-y;--promo-ink:#294534;--promo-muted:#728273}
+.promo-viewport{overflow:hidden;border-radius:inherit}
+.promo-track{display:flex;transition:transform .62s cubic-bezier(.22,.75,.24,1);will-change:transform}
+.promo-slide{position:relative;isolation:isolate;display:flex;align-items:center;justify-content:space-between;flex:0 0 100%;min-width:0;min-height:184px;padding:24px 32px;overflow:hidden}
+.promo-slide-green{background:radial-gradient(ellipse at 78% 28%,#f5f8cf 0,transparent 27%),linear-gradient(112deg,#d7eeb9 0%,#eef3c9 55%,#d5eaa9 100%);--promo-ink:#294330;--promo-muted:#667c62;--promo-accent:#3d6844;--promo-pale:#eef8d9}
+.promo-slide-peach{background:radial-gradient(ellipse at 79% 28%,#fff4d9 0,transparent 28%),linear-gradient(112deg,#f6e4ca 0%,#f6ecd9 54%,#efddc2 100%);--promo-ink:#513d31;--promo-muted:#897364;--promo-accent:#a36644;--promo-pale:#fcf1dc}
+.promo-slide-blue{background:radial-gradient(ellipse at 78% 25%,#e4f4f2 0,transparent 28%),linear-gradient(112deg,#dcebe9 0%,#eaf2e9 52%,#dbe6e2 100%);--promo-ink:#2d4545;--promo-muted:#748583;--promo-accent:#527b78;--promo-pale:#eff7f1}
+.promo-copy{position:relative;z-index:2;max-width:61%;}
+.promo-eyebrow{display:flex;align-items:center;gap:8px;color:var(--promo-muted);font-size:9px;font-weight:800;letter-spacing:1.15px}
+.promo-eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--promo-accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--promo-accent) 12%,transparent)}
+.promo-copy h2{margin:12px 0 7px;color:var(--promo-ink);font-family:Manrope,'DM Sans',sans-serif;font-size:24px;font-weight:800;line-height:1.18;letter-spacing:-.8px}
+.promo-copy p{margin:0 0 14px;color:var(--promo-muted);font-size:11px;line-height:1.5}
+.promo-cta{display:inline-flex;align-items:center;gap:14px;min-height:32px;padding:0 12px;border-radius:7px;background:var(--promo-accent);color:#fff;font-size:10px;font-weight:700;box-shadow:0 4px 10px color-mix(in srgb,var(--promo-accent) 24%,transparent);transition:transform .18s ease,box-shadow .18s ease}
+.promo-cta:hover{color:#fff;transform:translateY(-1px);box-shadow:0 7px 14px color-mix(in srgb,var(--promo-accent) 30%,transparent)}
+.promo-cta:focus-visible,.promo-dot:focus-visible,.promo-arrows button:focus-visible{outline:3px solid color-mix(in srgb,var(--promo-accent) 40%,white);outline-offset:3px}
+.promo-cta svg{width:13px;height:13px;stroke-width:2.2}
+.promo-art{position:absolute;inset:0 0 0 auto;width:44%;display:grid;place-items:center;overflow:hidden;pointer-events:none}
+.promo-art-orbit{position:absolute;border:1px solid color-mix(in srgb,var(--promo-accent) 20%,transparent);border-radius:50%;width:230px;height:132px;transform:rotate(-28deg)}
+.promo-art-orbit-one{right:24px;top:13px}
+.promo-art-orbit-two{right:47px;top:26px;width:192px;height:110px;transform:rotate(25deg)}
+.promo-art-spark{position:absolute;color:color-mix(in srgb,var(--promo-accent) 75%,white)}
+.promo-art-spark-one{right:34px;top:29px;font-size:19px}
+.promo-art-spark-two{left:28px;bottom:29px;font-size:13px}
+.promo-art-card{position:relative;width:112px;height:124px;border:1px solid #ffffffb5;border-radius:17px;background:linear-gradient(145deg,#ffffffed,#ffffffe0);box-shadow:0 15px 32px #34483218;display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(4deg);color:var(--promo-accent)}
+.promo-art-card>svg{position:absolute;top:11px;right:11px;width:15px;height:15px;stroke-width:1.8;opacity:.62}
+.promo-character-main{font-family:'Noto Serif SC',serif;font-size:58px;font-weight:700;line-height:1.05}
+.promo-character-small{position:absolute;right:-15px;bottom:20px;display:grid;place-items:center;width:43px;height:45px;border:1px solid #ffffffb5;border-radius:12px;background:var(--promo-pale);box-shadow:0 8px 18px #3448321a;font-family:'Noto Serif SC',serif;font-size:23px;transform:rotate(8deg)}
+.promo-art-label{margin-top:7px;color:var(--promo-muted);font-size:8px;letter-spacing:.3px}
+.promo-slide-peach .promo-art-card{transform:rotate(-4deg)}
+.promo-slide-peach .promo-character-main{font-size:53px}
+.promo-slide-blue .promo-art-card{width:148px;height:110px;transform:rotate(3deg)}
+.promo-hello{font-family:'Noto Serif SC',serif;font-size:33px;font-weight:700;letter-spacing:4px}
+.promo-soundwave{height:17px;display:flex;align-items:center;gap:3px;margin-top:4px}
+.promo-soundwave i{display:block;width:3px;height:8px;border-radius:4px;background:var(--promo-accent);opacity:.7}
+.promo-soundwave i:nth-child(2),.promo-soundwave i:nth-child(6){height:13px}
+.promo-soundwave i:nth-child(3),.promo-soundwave i:nth-child(5){height:17px}
+.promo-soundwave i:nth-child(4){height:10px}
+.promo-controls{position:absolute;right:20px;bottom:14px;z-index:3;display:flex;align-items:center;gap:13px}
+.promo-dots{display:flex;align-items:center;gap:5px}
+.promo-dot{width:6px;height:6px;padding:0;border:0;border-radius:9px;background:color-mix(in srgb,var(--promo-accent) 32%,white);transition:width .2s ease,background .2s ease}
+.promo-dot.is-active{width:19px;background:var(--promo-accent)}
+.promo-arrows{display:flex;gap:4px;margin-left:2px}
+.promo-arrows button{display:grid;place-items:center;width:25px;height:25px;border:1px solid color-mix(in srgb,var(--promo-accent) 18%,transparent);border-radius:50%;background:#ffffff8a;color:var(--promo-accent);transition:background .18s ease,transform .18s ease}
+.promo-arrows button:hover{background:#fff;transform:translateY(-1px)}
+.promo-arrows svg{width:14px;height:14px;stroke-width:1.8}
+@media(max-width:800px){.promo-slide{min-height:176px;padding:23px 24px}.promo-copy{max-width:66%}.promo-art{width:40%;opacity:.92}.promo-art-card{transform:scale(.88) rotate(4deg)}.promo-slide-peach .promo-art-card{transform:scale(.88) rotate(-4deg)}}
+@media(max-width:560px){.promo-carousel{margin-bottom:15px;border-radius:13px}.promo-slide{min-height:193px;align-items:flex-start;padding:21px 18px}.promo-copy{max-width:76%;padding-bottom:23px}.promo-eyebrow{font-size:7px;letter-spacing:.8px;gap:6px}.promo-eyebrow i{width:6px;height:6px}.promo-copy h2{font-size:20px;margin:10px 0 6px;letter-spacing:-.6px}.promo-copy p{max-width:230px;font-size:9px;line-height:1.45;margin-bottom:11px}.promo-cta{min-height:29px;padding:0 9px;gap:10px;font-size:9px}.promo-art{right:-29px;width:43%;opacity:.52}.promo-art-card{transform:scale(.73) rotate(4deg)}.promo-slide-peach .promo-art-card{transform:scale(.73) rotate(-4deg)}.promo-slide-blue .promo-art-card{transform:scale(.76) rotate(3deg)}.promo-art-orbit-one{right:-14px}.promo-art-orbit-two{right:6px}.promo-art-spark-one{right:13px}.promo-controls{right:13px;bottom:11px;gap:9px}.promo-dot{width:5px;height:5px}.promo-dot.is-active{width:15px}.promo-arrows{gap:3px}.promo-arrows button{width:22px;height:22px}}
+@media(prefers-reduced-motion:reduce){.promo-track,.promo-dot,.promo-cta,.promo-arrows button{transition:none}}
+
+.promo-art-card{z-index:2;transform:translateX(-33px) rotate(4deg) scale(.9)}
+.promo-slide-peach .promo-art-card{transform:translateX(-33px) rotate(-4deg) scale(.9)}
+.promo-slide-blue .promo-art-card{transform:translateX(-28px) rotate(3deg) scale(.9)}
+@media(max-width:800px){.promo-art-card{transform:translateX(-28px) rotate(4deg) scale(.8)}.promo-slide-peach .promo-art-card{transform:translateX(-28px) rotate(-4deg) scale(.8)}.promo-slide-blue .promo-art-card{transform:translateX(-24px) rotate(3deg) scale(.82)}}
+@media(max-width:560px){.promo-art{opacity:.58}.promo-art-card{transform:translateX(-25px) rotate(4deg) scale(.67)}.promo-slide-peach .promo-art-card{transform:translateX(-25px) rotate(-4deg) scale(.67)}.promo-slide-blue .promo-art-card{transform:translateX(-23px) rotate(3deg) scale(.7)}}
+
+/* Fade between real slides; no off-screen clones to leave the banner empty. */
+.promo-track{position:relative;display:block;min-height:184px;transform:none}
+.promo-slide{position:absolute;inset:0;display:flex;flex:none;opacity:0;visibility:hidden;pointer-events:none;transform:translateX(12px);transition:opacity .42s ease,transform .42s ease,visibility .42s}
+.promo-slide.is-active{position:relative;inset:auto;z-index:1;opacity:1;visibility:visible;pointer-events:auto;transform:translateX(0)}
+@media(max-width:800px){.promo-track{min-height:176px}}
+@media(max-width:560px){.promo-track{min-height:193px}}
+@media(prefers-reduced-motion:reduce){.promo-slide{transition:none}}
