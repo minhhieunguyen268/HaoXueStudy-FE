@@ -69,5 +69,39 @@
 .vocabulary-empty p{margin:0;color:#8f938a;font-size:11px}
 .vocabulary-empty .ant-btn{margin-top:4px}
 .vocabulary-loading .ant-spin{margin:3px}
+.vocabulary-title-row{position:relative;min-height:154px;overflow:hidden;align-items:center;padding:24px 29px;border:1px solid #e4ebdf;border-radius:15px;background:linear-gradient(112deg,#edf3e9 0%,#f2f2e8 58%,#f6ebde 100%)}
+.vocabulary-title-row::after{position:absolute;right:65px;top:-86px;width:245px;height:245px;border:1px solid #ffffffa6;border-radius:50%;content:""}
+.vocabulary-title-row>div:first-child{position:relative;z-index:1}
+.vocabulary-title-row h1{font-size:29px}
+.vocabulary-title-row p{font-size:11px}
+.vocabulary-featured-word{position:absolute;right:11%;top:50%;z-index:1;display:grid;justify-items:center;transform:translateY(-50%);color:#31563d}
+.vocabulary-featured-word>span{font-family:'Noto Serif SC',serif;font-size:76px;line-height:1;text-shadow:0 4px 15px #466a3c16}
+.vocabulary-featured-word>small{margin-top:6px;color:#72866e;font-size:9px;letter-spacing:.8px}
+.vocabulary-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0 20px}
+.vocabulary-summary-card{display:flex;min-height:68px;align-items:center;gap:11px;padding:12px 14px;border:1px solid #e9ece5;border-radius:10px;background:#fff;box-shadow:0 3px 12px #263b2d05}
+.vocabulary-summary-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#edf3eb;color:#577653}
+.vocabulary-summary-icon.warm{background:#f8f0e5;color:#b78b4f}
+.vocabulary-summary-icon.blue{background:#eaf1f3;color:#63818b}
+.vocabulary-summary-card>div{display:grid;gap:3px;min-width:0}
+.vocabulary-summary-card strong{color:#354438;font-size:16px;line-height:1}
+.vocabulary-summary-card small{overflow:hidden;color:#83897e;font-size:9px;text-overflow:ellipsis;white-space:nowrap}
+.vocabulary-summary-note{margin-left:auto;color:#c3cbbb;font-family:'Noto Serif SC',serif;font-size:13px}
+.vocabulary-filters{margin-top:0}
+.vocabulary-categories{margin-bottom:16px}
 @media(max-width:980px){.vocabulary-workspace{grid-template-columns:250px minmax(0,1fr)}.vocabulary-detail-grid{grid-template-columns:1fr}.vocabulary-writing-card{grid-row:1}.vocabulary-list-card{top:10px}.vocabulary-word-list{max-height:calc(100vh - 75px)}}
 @media(max-width:700px){.vocabulary-content{width:calc(100% - 28px);padding:25px 0 40px}.vocabulary-header{height:62px;padding:0 14px}.vocabulary-brand{font-size:14px}.vocabulary-brand>img{width:35px;height:35px}.vocabulary-back span{display:none}.vocabulary-title-row{align-items:flex-start}.vocabulary-title-row h1{font-size:23px}.vocabulary-title-row p{max-width:250px;line-height:1.5}.vocabulary-total{gap:5px;padding:8px;font-size:0}.vocabulary-total strong{font-size:12px}.vocabulary-total span{font-size:8px}.vocabulary-filters{grid-template-columns:minmax(0,1fr) 130px;gap:7px;margin-top:19px}.vocabulary-workspace{grid-template-columns:1fr}.vocabulary-list-card{position:static;max-height:none}.vocabulary-word-list{display:flex;max-height:150px;overflow:auto;gap:4px}.vocabulary-word-row{min-width:155px;width:155px;border:1px solid #f0f1ec}.vocabulary-word-overview{grid-template-columns:1fr;gap:15px}.vocabulary-word-card.ant-card .ant-card-body{padding:18px}.vocabulary-detail-hanzi{font-size:40px}}
+@media(max-width:700px){.vocabulary-title-row{min-height:136px;padding:20px 17px;align-items:center}.vocabulary-title-row h1{max-width:190px;font-size:21px}.vocabulary-title-row p{max-width:180px;font-size:10px}.vocabulary-featured-word{right:7%;opacity:.24}.vocabulary-featured-word>span{font-size:57px}.vocabulary-summary{gap:7px;margin:10px 0 16px}.vocabulary-summary-card{min-height:66px;gap:7px;padding:9px 8px}.vocabulary-summary-icon{width:29px;height:29px;flex:0 0 29px;border-radius:8px}.vocabulary-summary-icon svg{width:14px}.vocabulary-summary-card strong{font-size:14px}.vocabulary-summary-card small{font-size:8px}.vocabulary-summary-note{display:none}.vocabulary-filters{margin-top:0}}
+.vocabulary-word-select{display:flex;min-width:0;flex:1;align-items:center;gap:10px;padding:0;border:0;background:transparent;text-align:left}
+.vocabulary-speak-button{display:inline-flex;min-height:31px;flex:0 0 auto;align-items:center;justify-content:center;gap:6px;padding:0 9px;border:1px solid #e2e9df;border-radius:9px;background:#f7faf5;color:#50734f;font-size:9px;font-weight:700;transition:background .16s ease,border-color .16s ease,transform .16s ease}
+.vocabulary-speak-button:hover:not(:disabled){transform:translateY(-1px);border-color:#c8d8c3;background:#edf4eb;color:#31563d}
+.vocabulary-speak-button:focus-visible{outline:2px solid #8eae87;outline-offset:2px}
+.vocabulary-speak-button:disabled{cursor:not-allowed;opacity:.48}
+.vocabulary-speak-button.compact{width:29px;min-height:29px;padding:0;border-radius:50%;background:#fff}
+.vocabulary-word-row{padding:7px;gap:5px}
+.vocabulary-word-row:hover{background:#f7f8f4}
+.vocabulary-word-row.selected{background:#edf3eb}
+.vocabulary-word-row .vocabulary-word-hanzi{min-width:45px}
+.vocabulary-word-row .vocabulary-word-select:hover .vocabulary-word-hanzi{color:#244e3a}
+.vocabulary-word-main{gap:9px}
+.vocabulary-detail-hanzi{flex:0 0 auto}
+.vocabulary-word-main .vocabulary-speak-button{margin-right:2px}

@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Alert, Button, Card, Input, Select, Spin, Tag } from 'antd'
-import { BookOpenText, Search } from 'lucide-react'
+import { BookOpenText, Layers3, MessageCircle, Search } from 'lucide-react'
 import AppLayout from '../../../shared/components/AppLayout'
 import { getVocabulary, getVocabularyCategories, type VocabularyCategory, type VocabularyItem } from '../api/vocabularyApi'
+import SpeakButton from '../components/SpeakButton'
 import StrokePractice from '../components/StrokePractice'
 import '../styles/vocabulary.css'
 
@@ -53,6 +54,7 @@ function VocabularyPage() {
     ?? selectedWord?.characters[0]
     ?? null
   const tocflOptions = Array.from(new Set(items.map((item) => item.tocflLevel).filter((level): level is string => Boolean(level))))
+  const visibleExampleCount = items.reduce((count, item) => count + item.examples.length, 0)
 
   function chooseWord(item: VocabularyItem) {
     setSelectedId(item.id)
@@ -65,7 +67,13 @@ function VocabularyPage() {
       <div className="vocabulary-content">
         <section className="vocabulary-title-row">
           <div><span className="vocabulary-eyebrow">詞彙 · TỪ VỰNG</span><h1>Từ vựng phồn thể</h1><p>Tra cứu từ, xem ví dụ và luyện viết đúng thứ tự nét.</p></div>
-          <div className="vocabulary-total"><BookOpenText size={17} /><strong>{isLoading ? '…' : total}</strong><span>từ trong danh sách</span></div>
+          <div className="vocabulary-featured-word" aria-hidden="true"><span>{selectedWord?.traditional || '學'}</span><small>{selectedWord?.pinyin || 'xué xí'}</small></div>
+        </section>
+
+        <section className="vocabulary-summary" aria-label="Tổng quan từ vựng">
+          <article className="vocabulary-summary-card"><span className="vocabulary-summary-icon"><BookOpenText size={16} /></span><div><strong>{isLoading ? '…' : total}</strong><small>Từ trong kho</small></div><span className="vocabulary-summary-note">繁體</span></article>
+          <article className="vocabulary-summary-card"><span className="vocabulary-summary-icon warm"><Layers3 size={16} /></span><div><strong>{categories.length}</strong><small>Chủ đề học</small></div><span className="vocabulary-summary-note">分類</span></article>
+          <article className="vocabulary-summary-card"><span className="vocabulary-summary-icon blue"><MessageCircle size={16} /></span><div><strong>{visibleExampleCount}</strong><small>Câu ví dụ trong danh sách</small></div><span className="vocabulary-summary-note">例句</span></article>
         </section>
 
         <section className="vocabulary-filters" aria-label="Lọc từ vựng">
@@ -92,18 +100,21 @@ function VocabularyPage() {
             <aside className="vocabulary-list-card">
               <div className="vocabulary-list-heading"><strong>Danh sách từ</strong><span>{items.length}</span></div>
               <div className="vocabulary-word-list">
-                {items.map((item) => <button className={`vocabulary-word-row ${selectedWord.id === item.id ? 'selected' : ''}`} key={item.id} onClick={() => chooseWord(item)}>
-                  <span className="vocabulary-word-hanzi">{item.traditional}</span>
-                  <span className="vocabulary-word-copy"><strong>{item.meaningVi}</strong><small>{item.pinyin || item.zhuyin || 'Chưa có phiên âm'}</small></span>
-                  {item.tocflLevel && <span className="vocabulary-level">{item.tocflLevel}</span>}
-                </button>)}
+                {items.map((item) => <div className={`vocabulary-word-row ${selectedWord.id === item.id ? 'selected' : ''}`} key={item.id}>
+                  <button className="vocabulary-word-select" type="button" onClick={() => chooseWord(item)} aria-label={`Xem từ ${item.traditional}`}>
+                    <span className="vocabulary-word-hanzi">{item.traditional}</span>
+                    <span className="vocabulary-word-copy"><strong>{item.meaningVi}</strong><small>{item.pinyin || item.zhuyin || 'Chưa có phiên âm'}</small></span>
+                    {item.tocflLevel && <span className="vocabulary-level">{item.tocflLevel}</span>}
+                  </button>
+                  <SpeakButton text={item.traditional} compact />
+                </div>)}
               </div>
             </aside>
 
             <section className="vocabulary-detail" aria-live="polite">
               <Card className="vocabulary-word-card" bordered={false}>
                 <div className="vocabulary-word-overview">
-                  <div className="vocabulary-word-main"><span className="vocabulary-detail-hanzi">{selectedWord.traditional}</span><div className="vocabulary-pronunciations"><strong>{selectedWord.pinyin || 'Chưa có pinyin'}</strong><span>{selectedWord.zhuyin || 'Chưa có zhuyin'}</span></div></div>
+                  <div className="vocabulary-word-main"><span className="vocabulary-detail-hanzi">{selectedWord.traditional}</span><SpeakButton text={selectedWord.traditional} /><div className="vocabulary-pronunciations"><strong>{selectedWord.pinyin || 'Chưa có pinyin'}</strong><span>{selectedWord.zhuyin || 'Chưa có zhuyin'}</span></div></div>
                   <div className="vocabulary-definition"><span className="vocabulary-eyebrow">NGHĨA TIẾNG VIỆT</span><h2>{selectedWord.meaningVi}</h2><div className="vocabulary-tags">{selectedWord.wordType && <Tag>{selectedWord.wordType}</Tag>}{selectedWord.tocflLevel && <Tag color="green">TOCFL {selectedWord.tocflLevel}</Tag>}{selectedWord.categories.map((item) => <Tag key={item.id}>{item.name}</Tag>)}</div></div>
                 </div>
                 {selectedWord.audioUrl && <audio className="vocabulary-audio" controls src={selectedWord.audioUrl} />}
