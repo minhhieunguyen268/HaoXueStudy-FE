@@ -1,0 +1,277 @@
+:root.dark {
+  color-scheme: dark;
+  color: #e6eee6;
+  background: #111713;
+  --theme-page: #111713;
+  --theme-surface: #19211b;
+  --theme-surface-raised: #202a22;
+  --theme-line: #303b32;
+  --theme-text: #e6eee6;
+  --theme-muted: #a1afa2;
+  --theme-subtle: #758477;
+}
+
+:root.dark body,
+:root.dark #root {
+  background: var(--theme-page);
+  color: var(--theme-text);
+}
+
+:root.dark .app-shell,
+:root.dark .main-content,
+:root.dark .vocabulary-page,
+:root.dark .profile-page,
+:root.dark .login-page {
+  background: var(--theme-page);
+  color: var(--theme-text);
+}
+
+:root.dark .sidebar,
+:root.dark .topbar,
+:root.dark .vocabulary-header,
+:root.dark .profile-page-header,
+:root.dark .profile-page-card,
+:root.dark .login-card,
+:root.dark .stat-card,
+:root.dark .lesson-card,
+:root.dark .goal-card,
+:root.dark .word-card,
+:root.dark .vocabulary-summary-card,
+:root.dark .vocabulary-list-card,
+:root.dark .vocabulary-word-card.ant-card,
+:root.dark .vocabulary-detail-grid .ant-card,
+:root.dark .profile-page-content .ant-card {
+  background: var(--theme-surface);
+  border-color: var(--theme-line);
+  color: var(--theme-text);
+}
+
+:root.dark .brand-name,
+:root.dark .profile-copy strong,
+:root.dark .welcome-row h1,
+:root.dark .section-heading h2,
+:root.dark .lesson-info h3,
+:root.dark .stat-value,
+:root.dark .goal-top h3,
+:root.dark .word-body strong,
+:root.dark .breadcrumb strong,
+:root.dark .vocabulary-title-row h1,
+:root.dark .vocabulary-summary-card strong,
+:root.dark .vocabulary-list-heading strong,
+:root.dark .vocabulary-definition h2,
+:root.dark .vocabulary-example strong,
+:root.dark .profile-page-heading h1,
+:root.dark .login-heading h1,
+:root.dark .login-form label {
+  color: var(--theme-text);
+}
+
+:root.dark .side-label,
+:root.dark .breadcrumb,
+:root.dark .welcome-sub,
+:root.dark .lesson-info p,
+:root.dark .stat-label,
+:root.dark .stat-foot,
+:root.dark .goal-foot,
+:root.dark .profile-copy small,
+:root.dark .page-footer,
+:root.dark .vocabulary-title-row p,
+:root.dark .vocabulary-summary-card small,
+:root.dark .vocabulary-word-copy small,
+:root.dark .vocabulary-word-copy strong,
+:root.dark .vocabulary-list-heading span,
+:root.dark .vocabulary-no-examples,
+:root.dark .vocabulary-example p,
+:root.dark .profile-page-heading p,
+:root.dark .login-heading > p:last-child {
+  color: var(--theme-muted);
+}
+
+:root.dark .nav-item,
+:root.dark .search-box,
+:root.dark .week-button,
+:root.dark .icon-button,
+:root.dark .text-link,
+:root.dark .topic-count,
+:root.dark .nav-count,
+:root.dark .vocabulary-back,
+:root.dark .profile-back {
+  color: #b5c2b4;
+}
+
+:root.dark .nav-item:hover,
+:root.dark .nav-item.selected,
+:root.dark .vocabulary-word-row:hover,
+:root.dark .vocabulary-word-row.selected {
+  background: #27342a;
+  color: #dcebd8;
+}
+
+:root.dark .search-box,
+:root.dark .week-button,
+:root.dark .icon-button,
+:root.dark .profile,
+:root.dark .vocabulary-summary-card,
+:root.dark .vocabulary-word-row,
+:root.dark .vocabulary-examples-card,
+:root.dark .vocabulary-writing-card,
+:root.dark .profile-page-card,
+:root.dark .login-form .ant-input-affix-wrapper,
+:root.dark .login-form .ant-input {
+  border-color: var(--theme-line);
+}
+
+:root.dark .search-box input,
+:root.dark .vocabulary-page .ant-input,
+:root.dark .vocabulary-page .ant-select-selector,
+:root.dark .login-page .ant-input,
+:root.dark .profile-page .ant-input {
+  background: var(--theme-surface-raised);
+  color: var(--theme-text);
+}
+
+:root.dark .search-box input::placeholder,
+:root.dark .ant-input::placeholder {
+  color: #89988a;
+}
+
+:root.dark .ant-card,
+:root.dark .ant-card .ant-card-body,
+:root.dark .ant-card .ant-card-head {
+  color: var(--theme-text);
+}
+
+:root.dark .ant-card .ant-card-head,
+:root.dark .ant-card .ant-card-body {
+  border-color: var(--theme-line);
+}
+
+:root.dark .ant-input,
+:root.dark .ant-input-affix-wrapper,
+:root.dark .ant-select-selector,
+:root.dark .ant-select-dropdown,
+:root.dark .ant-select-item,
+:root.dark .ant-tag,
+:root.dark .ant-alert {
+  border-color: var(--theme-line);
+  background-color: var(--theme-surface-raised);
+  color: var(--theme-text);
+}
+
+:root.dark .ant-select-item-option-active:not(.ant-select-item-option-disabled),
+:root.dark .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background: #314331;
+}
+
+:root.dark .vocabulary-summary-icon,
+:root.dark .vocabulary-summary-icon.warm,
+:root.dark .vocabulary-summary-icon.blue,
+:root.dark .goal-icon,
+:root.dark .word-tag,
+:root.dark .ai-assistant-message-mark {
+  background: #2b3a2d;
+}
+
+:root.dark .vocabulary-example,
+:root.dark .vocabulary-word-row,
+:root.dark .vocabulary-list-heading,
+:root.dark .vocabulary-writing-card,
+:root.dark .vocabulary-examples-card {
+  border-color: var(--theme-line);
+}
+
+:root.dark .login-page {
+  background: #111713;
+}
+
+:root.dark .login-form label,
+:root.dark .password-label button,
+:root.dark .login-switch {
+  color: #d6e1d5;
+}
+
+:root.dark .login-form .ant-input-affix-wrapper,
+:root.dark .login-form .ant-input {
+  background: var(--theme-surface-raised);
+  color: var(--theme-text);
+}
+
+:root.dark .ai-assistant-panel {
+  border-color: var(--theme-line);
+  background: var(--theme-surface);
+}
+
+:root.dark .ai-assistant-messages,
+:root.dark .ai-assistant-composer {
+  background: var(--theme-surface);
+}
+
+:root.dark .ai-assistant-message p,
+:root.dark .ai-assistant-suggestions button,
+:root.dark .ai-assistant-typing {
+  border-color: var(--theme-line);
+  background: var(--theme-surface-raised);
+  color: var(--theme-text);
+}
+
+:root.dark .ai-assistant-composer {
+  border-color: var(--theme-line);
+}
+
+:root.dark .ai-assistant-composer textarea {
+  color: var(--theme-text);
+}
+
+:root.dark .ai-assistant-composer textarea::placeholder,
+:root.dark .ai-assistant-footnote,
+:root.dark .ai-assistant-suggestions > span {
+  color: var(--theme-muted);
+}
+
+.theme-toggle-button {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #e7eae3;
+  border-radius: 50%;
+  background: #fff;
+  color: #65745f;
+  transition: transform .18s ease, background .18s ease, color .18s ease, border-color .18s ease;
+}
+
+.theme-toggle-button:hover {
+  transform: rotate(-8deg);
+  border-color: #cbd8c7;
+  background: #f1f5ee;
+  color: #315d40;
+}
+
+.theme-toggle-button svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 1.8;
+}
+
+:root.dark .theme-toggle-button {
+  border-color: #3a493d;
+  background: #263229;
+  color: #e5c978;
+}
+
+:root.dark .theme-toggle-button:hover {
+  background: #334336;
+  color: #ffe49a;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle-button { transition: none; }
+}

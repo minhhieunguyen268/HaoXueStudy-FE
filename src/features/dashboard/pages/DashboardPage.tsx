@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Bell, CalendarDays, Search } from 'lucide-react'
 import AppLayout from '../../../shared/components/AppLayout'
+import AnimatedThemeToggler from '../../../shared/components/AnimatedThemeToggler'
 import UserAvatar from '../../../shared/components/UserAvatar'
 import PromotionalBannerCarousel from '../components/PromotionalBannerCarousel'
 import useAuthStore from '../../auth/authStore'
@@ -32,6 +33,7 @@ function DashboardPage() {
           </div>
           <div className="top-actions">
             <label className="search-box" onClick={() => requireLogin()}><Search aria-hidden="true" /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Tìm bài học..." aria-label="Tìm bài học" /><kbd>⌘ K</kbd></label>
+            <AnimatedThemeToggler />
             <button className="icon-button notification" aria-label="Thông báo" onClick={() => requireLogin(() => setActive('Thông báo'))}><Bell aria-hidden="true" /><i /></button>
             <Link className="top-avatar-link" aria-label="Tài khoản" to="/profile"><UserAvatar className="top-avatar" avatarUrl={user?.avatarUrl} alt="" /></Link>
           </div>

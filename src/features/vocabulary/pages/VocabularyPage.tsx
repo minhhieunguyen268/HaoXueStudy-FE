@@ -1,36 +1,62 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Alert, Button, Card, Input, Select, Spin, Tag } from 'antd'
-import { BookOpenText, Layers3, MessageCircle, Search } from 'lucide-react'
+import { BookOpenText, ChevronDown, ChevronLeft, ChevronRight, Layers3, MessageCircle, Search } from 'lucide-react'
 import AppLayout from '../../../shared/components/AppLayout'
-import { getVocabulary, getVocabularyCategories, type VocabularyCategory, type VocabularyItem } from '../api/vocabularyApi'
+import { getVocabulary, getVocabularyBooks, getVocabularyLessons, type VocabularyItem, type VocabularyLesson } from '../api/vocabularyApi'
 import SpeakButton from '../components/SpeakButton'
 import StrokePractice from '../components/StrokePractice'
 import '../styles/vocabulary.css'
 
+const BOOK_ONE = {
+  code: 'contemporary-chinese-1',
+  title: 'Giáo trình Đương Đại 1',
+  lessonCount: 15,
+}
+
+type WritingCharacter = {
+  id: number
+  traditionalChar: string
+  strokeCount: number | null
+}
+
 function VocabularyPage() {
   const [items, setItems] = useState<VocabularyItem[]>([])
-  const [categories, setCategories] = useState<VocabularyCategory[]>([])
+  const [lessons, setLessons] = useState<VocabularyLesson[]>([])
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [selectedCharacterId, setSelectedCharacterId] = useState<number | null>(null)
   const [query, setQuery] = useState('')
-  const [category, setCategory] = useState('')
-  const [tocflLevel, setTocflLevel] = useState('')
-  const [reloadKey, setReloadKey] = useState(0)
+  const [selectedLesson, setSelectedLesson] = useState(1)
+  const [isCurriculumLoading, setIsCurriculumLoading] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const [total, setTotal] = useState(0)
+  const selectedLessonData = lessons.find((item) => item.lessonNumber === selectedLesson)
 
   useEffect(() => {
     let active = true
-    getVocabularyCategories()
-      .then((result) => { if (active) setCategories(result) })
-      .catch(() => { if (active) setCategories([]) })
+    getVocabularyBooks()
+      .then((books) => {
+        if (!books.some((book) => book.code === BOOK_ONE.code)) throw new Error('Book 1 is missing')
+        return getVocabularyLessons(BOOK_ONE.code)
+      })
+      .then((result) => { if (active) setLessons(result) })
+      .catch(() => { if (active) setError('Chưa thể tải danh sách bài học. Kiểm tra kết nối backend rồi thử lại.') })
+      .finally(() => { if (active) setIsCurriculumLoading(false) })
     return () => { active = false }
   }, [])
 
   useEffect(() => {
     let active = true
-    getVocabulary({ q: query || undefined, category: category || undefined, tocflLevel: tocflLevel || undefined, page: 1, pageSize: 50 })
+    if (isCurriculumLoading || error) return () => { active = false }
+
+    if (!selectedLessonData) {
+      setItems([])
+      setTotal(0)
+      setIsLoading(false)
+      return () => { active = false }
+    }
+
+    getVocabulary({ q: query || undefined, bookCode: BOOK_ONE.code, lessonNumber: selectedLesson, page: 1, pageSize: 50 })
       .then((result) => {
         if (!active) return
         setItems(result.items)
@@ -44,16 +70,24 @@ function VocabularyPage() {
       .finally(() => { if (active) setIsLoading(false) })
 
     return () => { active = false }
-  }, [query, category, tocflLevel, reloadKey])
+  }, [query, selectedLesson, selectedLessonData?.id, isCurriculumLoading, error])
 
   const selectedWord = useMemo(
     () => items.find((item) => item.id === selectedId) ?? items[0] ?? null,
     [items, selectedId],
   )
-  const selectedCharacter = selectedWord?.characters.find((character) => character.id === selectedCharacterId)
-    ?? selectedWord?.characters[0]
+  const writingCharacters = useMemo<WritingCharacter[]>(() => {
+    if (!selectedWord) return []
+    if (selectedWord.characters.length) {
+      return selectedWord.characters.map(({ id, traditionalChar, strokeCount }) => ({ id, traditionalChar, strokeCount }))
+    }
+
+    const hanzi = Array.from(new Set(Array.from(selectedWord.traditional).filter((character) => /\p{Script=Han}/u.test(character))))
+    return hanzi.map((traditionalChar) => ({ id: traditionalChar.codePointAt(0) ?? 0, traditionalChar, strokeCount: null }))
+  }, [selectedWord])
+  const selectedCharacter = writingCharacters.find((character) => character.id === selectedCharacterId)
+    ?? writingCharacters[0]
     ?? null
-  const tocflOptions = Array.from(new Set(items.map((item) => item.tocflLevel).filter((level): level is string => Boolean(level))))
   const visibleExampleCount = items.reduce((count, item) => count + item.examples.length, 0)
 
   function chooseWord(item: VocabularyItem) {
@@ -66,35 +100,56 @@ function VocabularyPage() {
     <main className="main-content vocabulary-page">
       <div className="vocabulary-content">
         <section className="vocabulary-title-row">
-          <div><span className="vocabulary-eyebrow">詞彙 · TỪ VỰNG</span><h1>Từ vựng phồn thể</h1><p>Tra cứu từ, xem ví dụ và luyện viết đúng thứ tự nét.</p></div>
+          <div><span className="vocabulary-eyebrow">繁體中文 · TIẾNG TRUNG ĐÀI LOAN</span><h1>Từ vựng {BOOK_ONE.title}</h1><p>Học theo thứ tự bài trong giáo trình, kèm phát âm, ví dụ và luyện viết.</p></div>
           <div className="vocabulary-featured-word" aria-hidden="true"><span>{selectedWord?.traditional || '學'}</span><small>{selectedWord?.pinyin || 'xué xí'}</small></div>
         </section>
 
         <section className="vocabulary-summary" aria-label="Tổng quan từ vựng">
           <article className="vocabulary-summary-card"><span className="vocabulary-summary-icon"><BookOpenText size={16} /></span><div><strong>{isLoading ? '…' : total}</strong><small>Từ trong kho</small></div><span className="vocabulary-summary-note">繁體</span></article>
-          <article className="vocabulary-summary-card"><span className="vocabulary-summary-icon warm"><Layers3 size={16} /></span><div><strong>{categories.length}</strong><small>Chủ đề học</small></div><span className="vocabulary-summary-note">分類</span></article>
+          <article className="vocabulary-summary-card"><span className="vocabulary-summary-icon warm"><Layers3 size={16} /></span><div><strong>{BOOK_ONE.lessonCount}</strong><small>Bài trong quyển 1</small></div><span className="vocabulary-summary-note">課</span></article>
           <article className="vocabulary-summary-card"><span className="vocabulary-summary-icon blue"><MessageCircle size={16} /></span><div><strong>{visibleExampleCount}</strong><small>Câu ví dụ trong danh sách</small></div><span className="vocabulary-summary-note">例句</span></article>
         </section>
 
-        <section className="vocabulary-filters" aria-label="Lọc từ vựng">
-          <Input className="vocabulary-search" prefix={<Search size={16} />} value={query} onChange={(event) => { setIsLoading(true); setQuery(event.target.value) }} placeholder="Tìm chữ, pinyin hoặc nghĩa tiếng Việt" allowClear />
-          <Select
-            value={tocflLevel}
-            onChange={(value) => { setIsLoading(true); setTocflLevel(value) }}
-            options={[{ value: '', label: 'Tất cả cấp độ' }, ...tocflOptions.map((level) => ({ value: level, label: `TOCFL ${level}` }))]}
-            aria-label="Lọc theo cấp độ TOCFL"
-          />
+        <section className="book-one-panel" aria-label="Chọn bài học">
+          <div className="book-one-heading">
+            <div><span className="vocabulary-eyebrow">QUYỂN 1 · 15 BÀI</span><h2>{BOOK_ONE.title}</h2><p>Học từ vựng và luyện viết theo từng bài.</p></div>
+          </div>
+          <div className="book-one-current-lesson">
+            <button className="book-one-step" type="button" disabled={selectedLesson <= 1} onClick={() => { setIsLoading(true); setSelectedLesson((lesson) => Math.max(1, lesson - 1)) }} aria-label="Bài trước"><ChevronLeft size={18} /></button>
+            <div className="book-one-current-copy">
+              <span>ĐANG HỌC <i /> BÀI {String(selectedLesson).padStart(2, '0')}</span>
+              <strong>{selectedLessonData?.title || 'Chọn bài học'}</strong>
+              <small>{selectedLessonData?.vocabularyCount ?? 0} từ vựng</small>
+            </div>
+            <label className="book-one-select-label">Chọn bài
+              <Select
+                value={selectedLesson}
+                onChange={(value) => { setIsLoading(true); setSelectedLesson(value) }}
+                suffixIcon={<ChevronDown size={15} />}
+                options={Array.from({ length: BOOK_ONE.lessonCount }, (_, index) => {
+                  const lesson = index + 1
+                  const count = lessons.find((item) => item.lessonNumber === lesson)?.vocabularyCount
+                  return { value: lesson, label: `Bài ${String(lesson).padStart(2, '0')}${count ? ` · ${count} từ` : ''}` }
+                })}
+                aria-label="Chọn bài trong Giáo trình Đương Đại 1"
+              />
+            </label>
+            <button className="book-one-step" type="button" disabled={selectedLesson >= BOOK_ONE.lessonCount} onClick={() => { setIsLoading(true); setSelectedLesson((lesson) => Math.min(BOOK_ONE.lessonCount, lesson + 1)) }} aria-label="Bài tiếp theo"><ChevronRight size={18} /></button>
+          </div>
+          <div className="book-one-progress" aria-label={`Bài ${selectedLesson} trên ${BOOK_ONE.lessonCount}`}>
+            <span style={{ width: `${(selectedLesson / BOOK_ONE.lessonCount) * 100}%` }} />
+          </div>
+          <div className="book-one-progress-caption"><span>TIẾN ĐỘ GIÁO TRÌNH</span><span>{String(selectedLesson).padStart(2, '0')} / {String(BOOK_ONE.lessonCount).padStart(2, '0')}</span></div>
         </section>
 
-        <nav className="vocabulary-categories" aria-label="Lọc theo chủ đề">
-          <button className={!category ? 'active' : ''} onClick={() => { setIsLoading(true); setCategory('') }}>Tất cả</button>
-          {categories.map((item) => <button className={category === item.slug ? 'active' : ''} key={item.id} onClick={() => { setIsLoading(true); setCategory(item.slug) }}>{item.name}</button>)}
-        </nav>
+        <section className="vocabulary-filters" aria-label="Tìm trong bài học">
+          <Input className="vocabulary-search" prefix={<Search size={16} />} value={query} onChange={(event) => { setIsLoading(true); setQuery(event.target.value) }} placeholder="Tìm chữ, pinyin hoặc nghĩa tiếng Việt" allowClear />
+        </section>
 
-        {error ? <Alert type="error" showIcon message={error} action={<Button type="link" onClick={() => { setIsLoading(true); setError(''); setReloadKey((key) => key + 1) }}>Thử lại</Button>} /> : isLoading && items.length === 0 ? (
+        {error ? <Alert type="error" showIcon message={error} action={<Button type="link" onClick={() => window.location.reload()}>Thử lại</Button>} /> : (isLoading || isCurriculumLoading) && items.length === 0 ? (
           <div className="vocabulary-loading"><Spin size="large" /><span>Đang tải từ vựng...</span></div>
         ) : items.length === 0 ? (
-          <div className="vocabulary-empty"><span>暫無詞彙</span><h2>Chưa có từ trong mục này</h2><p>Thử chủ đề khác hoặc xóa bộ lọc tìm kiếm.</p><Button onClick={() => { setCategory(''); setQuery(''); setTocflLevel('') }}>Xóa bộ lọc</Button></div>
+          <div className="vocabulary-empty"><span>第 {String(selectedLesson).padStart(2, '0')} 課</span><h2>{selectedLessonData ? query ? 'Không tìm thấy từ phù hợp' : 'Bài này chưa có từ vựng' : 'Chưa tìm thấy bài học này'}</h2><p>{selectedLessonData ? query ? 'Thử từ khóa khác hoặc xóa nội dung tìm kiếm.' : 'Thêm từ mới vào bài này để bắt đầu học.' : 'Kiểm tra dữ liệu Book và Lesson trong backend.'}</p>{query && <Button onClick={() => setQuery('')}>Xóa tìm kiếm</Button>}</div>
         ) : selectedWord && (
           <div className="vocabulary-workspace">
             <aside className="vocabulary-list-card">
@@ -133,11 +188,11 @@ function VocabularyPage() {
 
                 <Card className="vocabulary-writing-card" bordered={false} title={<span><span className="writing-title-zh">筆順</span> Thứ tự nét</span>}>
                   <div className="vocabulary-character-tabs" aria-label="Chọn chữ để luyện viết">
-                    {selectedWord.characters.map((character) => <button key={character.id} className={(selectedCharacter?.id === character.id ? 'selected' : '')} onClick={() => setSelectedCharacterId(character.id)} aria-label={`Luyện viết chữ ${character.traditionalChar}`}>
+                    {writingCharacters.map((character) => <button key={character.id} className={(selectedCharacter?.id === character.id ? 'selected' : '')} onClick={() => setSelectedCharacterId(character.id)} aria-label={`Luyện viết chữ ${character.traditionalChar}`}>
                       {character.traditionalChar}
                     </button>)}
                   </div>
-                  {selectedCharacter ? <StrokePractice key={selectedCharacter.id} character={selectedCharacter.traditionalChar} strokeCount={selectedCharacter.strokeCount} /> : <p className="vocabulary-no-examples">Không có dữ liệu chữ để luyện viết.</p>}
+                  {selectedCharacter ? <StrokePractice key={selectedCharacter.traditionalChar} character={selectedCharacter.traditionalChar} strokeCount={selectedCharacter.strokeCount} /> : <p className="vocabulary-no-examples">Từ này chưa có chữ Hán để luyện nét.</p>}
                 </Card>
               </div>
             </section>

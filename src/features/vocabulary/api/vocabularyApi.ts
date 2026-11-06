@@ -8,6 +8,24 @@ export interface VocabularyCategory {
   parentId: number | null
 }
 
+export interface VocabularyBook {
+  id: number
+  code: string
+  title: string
+  description: string | null
+  lessonCount: number
+  vocabularyCount: number
+}
+
+export interface VocabularyLesson {
+  id: number
+  bookCode: string
+  bookTitle: string
+  lessonNumber: number
+  title: string
+  vocabularyCount: number
+}
+
 export interface VocabularyExample {
   id: number
   sentenceTraditional: string
@@ -59,6 +77,8 @@ export interface VocabularyFilters {
   q?: string
   category?: string
   tocflLevel?: string
+  bookCode?: string
+  lessonNumber?: number
   page?: number
   pageSize?: number
 }
@@ -70,5 +90,15 @@ export async function getVocabulary(filters: VocabularyFilters = {}) {
 
 export async function getVocabularyCategories() {
   const { data } = await api.get<VocabularyCategory[]>('/categories')
+  return data
+}
+
+export async function getVocabularyBooks() {
+  const { data } = await api.get<VocabularyBook[]>('/vocabulary/books')
+  return data
+}
+
+export async function getVocabularyLessons(bookCode: string) {
+  const { data } = await api.get<VocabularyLesson[]>(`/vocabulary/books/${encodeURIComponent(bookCode)}/lessons`)
   return data
 }

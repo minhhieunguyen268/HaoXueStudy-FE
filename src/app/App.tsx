@@ -1,8 +1,9 @@
 import { lazy, Suspense, useEffect } from 'react'
-import { ConfigProvider } from 'antd'
+import { ConfigProvider, theme as antdTheme } from 'antd'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import '../features/dashboard/styles/dashboard.css'
 import useAuthStore from '../features/auth/authStore'
+import useThemeStore from '../shared/theme/themeStore'
 
 const DashboardPage = lazy(() => import('../features/dashboard/pages/DashboardPage'))
 const LoginPage = lazy(() => import('../features/auth/pages/LoginPage'))
@@ -32,8 +33,10 @@ function AppRoutes() {
 }
 
 function App() {
+  const theme = useThemeStore((state) => state.theme)
+
   return (
-    <ConfigProvider theme={{ token: { colorPrimary: '#244e3a', borderRadius: 7, fontFamily: "'DM Sans', sans-serif" } }}>
+    <ConfigProvider theme={{ algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm, token: { colorPrimary: '#244e3a', borderRadius: 7, fontFamily: "'DM Sans', sans-serif" } }}>
       <BrowserRouter>
         <AppRoutes />
       </BrowserRouter>
