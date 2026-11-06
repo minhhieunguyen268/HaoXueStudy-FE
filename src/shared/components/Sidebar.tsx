@@ -1,4 +1,4 @@
-import { BookOpen, House, Languages, MessageCircle, PanelLeftClose, PanelLeftOpen, Plane, School, Utensils } from 'lucide-react'
+import { AudioLines, BookOpen, House, Languages, MessageCircle, PanelLeftClose, PanelLeftOpen, Plane, School, Utensils } from 'lucide-react'
 import { Link, NavLink } from 'react-router-dom'
 import type { AuthUser } from '../../features/auth/api/authApi'
 import UserAvatar from './UserAvatar'
@@ -39,6 +39,9 @@ function Sidebar({ user, collapsed, activeSection, onToggle, onSectionSelect }: 
         </button>
         <NavLink className={({ isActive }) => `nav-item ${(activeSection === undefined ? isActive : activeSection === 'Từ vựng') ? 'selected' : ''}`} to="/vocabulary">
           <Languages className="nav-icon" aria-hidden="true" /><span>Từ vựng</span><span className="nav-count">8</span>
+        </NavLink>
+        <NavLink className={({ isActive }) => `nav-item ${(activeSection === undefined ? isActive : activeSection === 'Phát âm') ? 'selected' : ''}`} to="/pronunciation">
+          <AudioLines className="nav-icon" aria-hidden="true" /><span>Phát âm</span>
         </NavLink>
       </nav>
       <div className="side-label topic-label">CHỦ ĐỀ TỪ VỰNG <span>5</span></div>

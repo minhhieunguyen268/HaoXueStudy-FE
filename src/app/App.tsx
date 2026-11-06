@@ -9,6 +9,7 @@ const DashboardPage = lazy(() => import('../features/dashboard/pages/DashboardPa
 const LoginPage = lazy(() => import('../features/auth/pages/LoginPage'))
 const ProfilePage = lazy(() => import('../features/auth/pages/ProfilePage'))
 const VocabularyPage = lazy(() => import('../features/vocabulary/pages/VocabularyPage'))
+const PronunciationPage = lazy(() => import('../features/pronunciation/pages/PronunciationPage'))
 
 function AppRoutes() {
   const user = useAuthStore((state) => state.user)
@@ -25,6 +26,7 @@ function AppRoutes() {
         <Route path="/" element={isLoading ? <div className="auth-loading">Đang kiểm tra phiên đăng nhập...</div> : user ? <DashboardPage /> : <Navigate to="/login" replace />} />
         <Route path="/profile" element={isLoading ? <div className="auth-loading">Đang kiểm tra phiên đăng nhập...</div> : user ? <ProfilePage /> : <Navigate to="/login" replace />} />
         <Route path="/vocabulary" element={isLoading ? <div className="auth-loading">Đang kiểm tra phiên đăng nhập...</div> : user ? <VocabularyPage /> : <Navigate to="/login" replace />} />
+        <Route path="/pronunciation" element={isLoading ? <div className="auth-loading">Đang kiểm tra phiên đăng nhập...</div> : user ? <PronunciationPage /> : <Navigate to="/login" replace />} />
         <Route path="/login" element={isLoading ? <div className="auth-loading">Đang kiểm tra phiên đăng nhập...</div> : user ? <Navigate to="/" replace /> : <LoginPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
