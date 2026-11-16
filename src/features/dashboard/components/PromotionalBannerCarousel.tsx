@@ -1,35 +1,32 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, BookOpenText, ChevronLeft, ChevronRight, Headphones, PenLine } from 'lucide-react'
+import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import './promotional-banner-carousel.css'
 
 const slides = [
   {
     eyebrow: 'HÀNH TRÌNH TIẾNG TRUNG ĐÀI LOAN',
-    title: <>Phồn thể mỗi ngày,<br />tự tin hơn từng chút.</>,
-    description: 'Khám phá từ vựng thực tế, có nghĩa và cách đọc rõ ràng.',
+    title: <>Học theo từng chặng,<br /><em>nhớ theo từng bài.</em></>,
+    description: 'Học tiếng Trung phồn thể qua 15 bài của Giáo trình Đương Đại 1.',
     action: 'Khám phá từ vựng',
-    icon: BookOpenText,
     theme: 'green',
     art: <><span className="promo-character-main">學</span><span className="promo-character-small">好</span><span className="promo-art-label">xué · học</span></>,
   },
   {
     eyebrow: 'LUYỆN VIẾT CHỮ HÁN',
-    title: <>Viết đúng thứ tự nét,<br />nhớ chữ lâu hơn.</>,
+    title: <>Viết đúng thứ tự nét,<br /><em>nhớ chữ lâu hơn.</em></>,
     description: 'Quan sát từng nét và thực hành ngay với chữ phồn thể.',
     action: 'Luyện viết ngay',
-    icon: PenLine,
     theme: 'peach',
     art: <><span className="promo-character-main">筆</span><span className="promo-character-small">順</span><span className="promo-art-label">từng nét một</span></>,
   },
   {
     eyebrow: 'NGHE VÀ LUYỆN PHÁT ÂM',
-    title: <>Nghe rõ cách đọc,<br />ghi nhớ tự nhiên.</>,
+    title: <>Nghe rõ cách đọc,<br /><em>ghi nhớ tự nhiên.</em></>,
     description: 'Nghe từ vựng tiếng Quan Thoại rồi luyện đọc theo.',
-    action: 'Học từ vựng',
-    icon: Headphones,
+    action: 'Luyện phát âm',
     theme: 'blue',
-    art: <><span className="promo-hello">你好</span><span className="promo-soundwave"><i /><i /><i /><i /><i /><i /><i /></span><span className="promo-art-label">nǐ hǎo · xin chào</span></>,
+    art: <><span className="promo-hello">你好</span><span className="promo-art-label">nǐ hǎo · xin chào</span></>,
   },
 ]
 
@@ -75,7 +72,6 @@ function PromotionalBannerCarousel() {
       >
         <div className="promo-track">
           {slides.map((slide, index) => {
-            const Icon = slide.icon
             const isActive = index === activeIndex
             return (
               <article
@@ -90,7 +86,7 @@ function PromotionalBannerCarousel() {
                   <span className="promo-eyebrow"><i /><span>{slide.eyebrow}</span></span>
                   <h2>{slide.title}</h2>
                   <p>{slide.description}</p>
-                  <Link className="promo-cta" to="/vocabulary">
+                  <Link className="promo-cta" to={slide.theme === 'blue' ? '/pronunciation' : '/vocabulary'}>
                     {slide.action}<ArrowRight aria-hidden="true" />
                   </Link>
                 </div>
@@ -99,7 +95,7 @@ function PromotionalBannerCarousel() {
                   <span className="promo-art-orbit promo-art-orbit-two" />
                   <span className="promo-art-spark promo-art-spark-one">✦</span>
                   <span className="promo-art-spark promo-art-spark-two">✳</span>
-                  <div className="promo-art-card"><Icon aria-hidden="true" />{slide.art}</div>
+                  <div className="promo-art-card">{slide.art}</div>
                 </div>
               </article>
             )

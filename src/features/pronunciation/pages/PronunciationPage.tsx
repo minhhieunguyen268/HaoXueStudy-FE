@@ -21,7 +21,7 @@ const tones: Tone[] = [
   { number: 2, label: 'Thanh 2 — Sắc', chineseLabel: '第二聲（陽平）', mark: '／', quality: 'Bắt đầu thấp vừa rồi nâng giọng lên.', example: '麻 má', exampleMeaning: 'cây gai', color: 'blue' },
   { number: 3, label: 'Thanh 3 — Hỏi', chineseLabel: '第三聲（上聲）', mark: '∨', quality: 'Hạ giọng xuống thấp rồi nhấc lên nhẹ.', example: '馬 mǎ', exampleMeaning: 'con ngựa', color: 'amber' },
   { number: 4, label: 'Thanh 4 — Nặng', chineseLabel: '第四聲（去聲）', mark: '＼', quality: 'Hạ giọng nhanh và dứt khoát.', example: '罵 mà', exampleMeaning: 'mắng', color: 'coral' },
-  { number: null, label: 'Thanh nhẹ', chineseLabel: '輕聲', mark: '·', quality: 'Đọc ngắn, nhẹ và không nhấn.', example: '媽媽 māma', exampleMeaning: 'mẹ', color: 'neutral' },
+  { number: null, label: 'Thanh nhẹ', chineseLabel: '聲', mark: '·', quality: 'Đọc ngắn, nhẹ và không nhấn.', example: '媽 ma', exampleMeaning: 'mẹ', color: 'neutral' },
 ]
 
 const toneChartData = [
@@ -66,13 +66,13 @@ const chartRows = [
   ['j', 'ji · jia · jie · jiao · jiu · jian · jin · jiang · jing · jiong · ju · jue · juan · jun'],
   ['q', 'qi · qia · qie · qiao · qiu · qian · qin · qiang · qing · qiong · qu · que · quan · qun'],
   ['x', 'xi · xia · xie · xiao · xiu · xian · xin · xiang · xing · xiong · xu · xue · xuan · xun'],
-  ['zh', 'zha · zhe · zhai · zhao · zhou · zhan · zhen · zhang · zheng · zhong · zhu · zhua · zhuo · zhuai · zhui · zhuan · zhun · zhuang'],
-  ['ch', 'cha · che · chai · chao · chou · chan · chen · chang · cheng · chong · chu · chua · chuo · chuai · chui · chuan · chun · chuang'],
-  ['sh', 'sha · she · shai · shei · shao · shou · shan · shen · shang · sheng · shu · shua · shuo · shuai · shui · shuan · shun · shuang'],
-  ['r', 're · rao · rou · ran · ren · rang · reng · rong · ru · ruo · rui · ruan · run'],
-  ['z', 'za · ze · zei · zao · zou · zan · zen · zang · zeng · zong · zu · zuo · zuan · zun'],
-  ['c', 'ca · ce · cai · cao · cou · can · cen · cang · ceng · cong · cu · cuo · cuan · cun'],
-  ['s', 'sa · se · sai · sao · sou · san · sen · sang · seng · song · su · suo · suan · sun'],
+  ['zh', 'zha · zhe · zhi · zhai · zhao · zhou · zhan · zhen · zhang · zheng · zhong · zhu · zhua · zhuo · zhuai · zhui · zhuan · zhun · zhuang'],
+  ['ch', 'cha · che · chi · chai · chao · chou · chan · chen · chang · cheng · chong · chu · chua · chuo · chuai · chui · chuan · chun · chuang'],
+  ['sh', 'sha · she · shi · shai · shei · shao · shou · shan · shen · shang · sheng · shu · shua · shuo · shuai · shui · shuan · shun · shuang'],
+  ['r', 'ri · re · rao · rou · ran · ren · rang · reng · rong · ru · ruo · rui · ruan · run'],
+  ['z', 'zi · za · ze · zei · zao · zou · zan · zen · zang · zeng · zong · zu · zuo · zuan · zun'],
+  ['c', 'ci · ca · ce · cai · cao · cou · can · cen · cang · ceng · cong · cu · cuo · cuan · cun'],
+  ['s', 'si · sa · se · sai · sao · sou · san · sen · sang · seng · song · su · suo · suan · sun'],
   ['y / w', 'yi · ya · ye · yao · you · yan · yin · yang · ying · yong · yu · yue · yuan · yun · wa · wo · wai · wei · wan · wen · wang · weng · wu'],
 ]
 
@@ -85,25 +85,79 @@ const quiz: QuizItem[] = [
   { hanzi: '朋友', meaning: 'bạn bè', answer: 'péngyou', choices: ['pēngyōu', 'pěngyǒu', 'pèngyòu', 'péngyou'] },
 ]
 
-function speak(text: string) {
-  if (!('speechSynthesis' in window)) return
-  window.speechSynthesis.cancel()
-  const utterance = new SpeechSynthesisUtterance(text)
-  utterance.lang = 'zh-TW'
-  utterance.rate = 0.78
-  const voice = window.speechSynthesis.getVoices().find((item) => item.lang.toLowerCase() === 'zh-tw')
-  if (voice) utterance.voice = voice
-  window.speechSynthesis.speak(utterance)
+const syllableSpeechSamples: Partial<Record<string, string>> = {
+  pa: '趴',
 }
 
+const standaloneFinals: Record<string, string> = {
+  yi: 'i', ya: 'ia', ye: 'ie', yao: 'iao', you: 'iou', yan: 'ian',
+  yin: 'in', yang: 'iang', ying: 'ing', yong: 'iong',
+  yu: 'ü', yue: 'üe', yuan: 'üan', yun: 'ün',
+  wa: 'ua', wo: 'uo', wai: 'uai', wei: 'uei', wan: 'uan',
+  wen: 'un', wang: 'uang', weng: 'ueng', wu: 'u',
+}
+
+function getSyllableFinal(initial: string, syllable: string) {
+  if (initial === 'y / w') return standaloneFinals[syllable]
+  const final = syllable.slice(initial.length)
+  if (final === 'iu') return 'iou'
+  if (final === 'ui') return 'uei'
+  return /^[jqx]$/.test(initial) && final.startsWith('u')
+    ? final.replace(/^u/, 'ü')
+    : final
+}
+
+const pinyinMatrix = chartRows.map(([initial, syllables]) => {
+  const byFinal = new Map<string, string>()
+  for (const syllable of syllables.split(' · ')) {
+    byFinal.set(getSyllableFinal(initial, syllable), syllable)
+  }
+  return { initial, byFinal }
+})
+
+const pinyinColumns = [...new Set([
+  ...finals.flatMap(({ symbols }) => symbols.map(([symbol]) => symbol)),
+  ...pinyinMatrix.flatMap(({ byFinal }) => [...byFinal.keys()]),
+])]
+
 function PronunciationPage() {
+  const [audioError, setAudioError] = useState('')
   const [activeTab, setActiveTab] = useState<PronunciationTab>('tones')
+  const [selectedInitial, setSelectedInitial] = useState('b')
+  const [selectedFinal, setSelectedFinal] = useState('a')
   const [expandedTone, setExpandedTone] = useState<number | null | undefined>(undefined)
   const [questionIndex, setQuestionIndex] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
   const [score, setScore] = useState(0)
   const question = quiz[questionIndex]
+  const selectedInitialSyllables = chartRows.find(([initial]) => initial === selectedInitial)?.[1].split(' · ') ?? []
+  const selectedFinalSyllables = chartRows.flatMap(([initial, syllables]) =>
+    syllables.split(' · ').filter((syllable) => getSyllableFinal(initial, syllable) === selectedFinal),
+  )
   const answeredCorrectly = selectedAnswer === question.answer
+
+  function speak(text: string) {
+    setAudioError('')
+    if (!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) {
+      setAudioError('Trình duyệt này không hỗ trợ phát âm.')
+      return
+    }
+
+    const synth = window.speechSynthesis
+    synth.cancel()
+    const utterance = new SpeechSynthesisUtterance(syllableSpeechSamples[text] ?? text)
+    const voices = synth.getVoices()
+    const voice = voices.find((item) => item.lang.toLowerCase() === 'zh-tw')
+      ?? voices.find((item) => /^(zh|cmn)(-|$)/i.test(item.lang))
+    utterance.voice = voice ?? null
+    utterance.lang = voice?.lang ?? 'zh-TW'
+    utterance.rate = 0.78
+    utterance.onerror = ({ error }) => {
+      if (error === 'canceled' || error === 'interrupted') return
+      setAudioError('Không phát được âm mẫu. Hãy kiểm tra giọng đọc tiếng Hoa trên thiết bị rồi thử lại.')
+    }
+    synth.speak(utterance)
+  }
 
   function answer(choice: string) {
     if (selectedAnswer) return
@@ -149,6 +203,7 @@ function PronunciationPage() {
             {pronunciationTabs.map((tab) => <button id={`tab-${tab.id}`} key={tab.id} className={activeTab === tab.id ? 'active' : ''} type="button" role="tab" aria-selected={activeTab === tab.id} aria-controls={`panel-${tab.id}`} onClick={() => setActiveTab(tab.id)}><span>{tab.number}</span>{tab.label}</button>)}
           </nav>
 
+          {audioError && <p role="alert">{audioError}</p>}
           <div className="pronunciation-tab-panel" role="tabpanel" id={`panel-${activeTab}`} aria-labelledby={`tab-${activeTab}`} key={activeTab}>
           {activeTab === 'tones' && <section className="pronunciation-section" id="tones">
             <div className="tone-overview-chart">
@@ -184,22 +239,80 @@ function PronunciationPage() {
           </section>}
 
           {activeTab === 'initials' && <section className="pronunciation-section" id="initials">
-            <div className="pronunciation-section-heading"><div><span className="pronunciation-section-kicker">02 · INITIALS</span><h2>Thanh mẫu · 聲母</h2><p>Âm phụ âm đứng đầu một âm tiết. Chạm vào âm mẫu để nghe ví dụ.</p></div><span className="pronunciation-section-mark">21 ÂM</span></div>
-            <div className="phoneme-groups">{initials.map((group) => <article className="phoneme-group" key={group.group}><h3>{group.group}</h3><div className="phoneme-chips">{group.symbols.map(([symbol, example]) => <button type="button" className="phoneme-chip" key={symbol} onClick={() => speak(example.split(' ')[0])}><strong>{symbol}</strong><small>{example}</small><Volume2 size={13} /></button>)}</div></article>)}</div>
+            <div className="pronunciation-section-heading"><div><span className="pronunciation-section-kicker">02 · INITIALS</span><h2>Thanh mẫu · 聲母</h2><p>Chọn một âm đầu để xem các vần có thể ghép và nghe từng âm tiết.</p></div><span className="pronunciation-section-mark">21 ÂM</span></div>
+            <div className="phoneme-groups">{initials.map((group) => <article className="phoneme-group" key={group.group}><h3>{group.group}</h3><div className="phoneme-chips">{group.symbols.map(([symbol, example]) => <button type="button" className={`phoneme-chip ${selectedInitial === symbol ? 'selected' : ''}`} key={symbol} aria-pressed={selectedInitial === symbol} onClick={() => setSelectedInitial(symbol)}><strong>{symbol}</strong><small>{example}</small><ChevronRight size={13} /></button>)}</div></article>)}</div>
+            <article className="initial-combination-panel" aria-live="polite">
+              <div className="initial-combination-heading"><div><span className="pronunciation-section-kicker">GHÉP THANH MẪU + VẬN MẪU</span><h3>Âm tiết bắt đầu bằng <b>{selectedInitial}</b></h3></div><span>{selectedInitialSyllables.length} vần</span></div>
+              <p>Bấm vào từng âm tiết để nghe cách đọc mẫu.</p>
+              <div className="initial-syllable-list">{selectedInitialSyllables.map((syllable) => <button type="button" className="initial-syllable-chip" key={syllable} onClick={() => speak(syllable)} aria-label={`Nghe âm tiết ${syllable}`}><strong>{syllable}</strong><Volume2 size={14} /></button>)}</div>
+            </article>
             <p className="pronunciation-footnote"><b>Ghi nhớ:</b> b, d, g là âm tắc không bật hơi; p, t, k bật hơi rõ. Pinyin chuẩn có 21 thanh mẫu; y và w thường dùng để ghi âm đầu trong chính tả.</p>
           </section>}
 
           {activeTab === 'finals' && <section className="pronunciation-section" id="finals">
             <div className="pronunciation-section-heading"><div><span className="pronunciation-section-kicker">03 · FINALS</span><h2>Vận mẫu · 韻母</h2><p>Phần nguyên âm đứng sau thanh mẫu, hoặc tự tạo thành âm tiết.</p></div><span className="pronunciation-section-mark">韻母</span></div>
-            <div className="final-groups">{finals.map((group) => <article className="final-group" key={group.group}><h3>{group.group}</h3><div className="final-chips">{group.symbols.map(([symbol, example]) => <button type="button" key={symbol} onClick={() => speak(example.split(' ').at(-1) ?? symbol)}><strong>{symbol}</strong><small>{example}</small><Volume2 size={13} /></button>)}</div></article>)}</div>
+            <div className="final-groups">
+              {finals.map((group) => (
+                <article className="final-group" key={group.group}>
+                  <h3>{group.group}</h3>
+                  <div className="final-chips">
+                    {group.symbols.map(([symbol, example]) => (
+                      <button type="button" key={symbol} className="phoneme-chip" aria-pressed={selectedFinal === symbol} onClick={() => setSelectedFinal(symbol)}>
+                        <strong>{symbol}</strong><small>{example}</small><ChevronRight size={13} />
+                      </button>
+                    ))}
+                  </div>
+                </article>
+              ))}
+            </div>
+            <article className="initial-combination-panel">
+              <div className="initial-combination-heading" aria-live="polite">
+                <h3>Âm tiết có vần <b>{selectedFinal}</b></h3>
+                <span>{selectedFinalSyllables.length} âm tiết</span>
+              </div>
+              <p>Bấm vào từng âm tiết để nghe cách đọc mẫu.</p>
+              <div className="initial-syllable-list">
+                {selectedFinalSyllables.map((syllable) => (
+                  <button type="button" className="initial-syllable-chip" key={syllable} onClick={() => speak(syllable)} aria-label={`Nghe âm tiết ${syllable}`}>
+                    <strong>{syllable}</strong><Volume2 size={14} />
+                  </button>
+                ))}
+              </div>
+            </article>
             <div className="pronunciation-tip"><Waves size={17} /><p><strong>Chú ý âm ü:</strong> sau j, q, x và y, hai chấm được lược bỏ: ju, qu, xu, yu vẫn đọc với âm <b>ü</b>.</p></div>
           </section>}
 
           {activeTab === 'pinyin-chart' && <section className="pronunciation-section" id="pinyin-chart">
             <div className="pronunciation-section-heading"><div><span className="pronunciation-section-kicker">04 · SYLLABLE TABLE</span><h2>Bảng âm tiết Pinyin</h2><p>Chọn một âm tiết để nghe phát âm mẫu bằng giọng đọc của thiết bị.</p></div><span className="pronunciation-section-mark">拼音表</span></div>
             <div className="pinyin-chart">
-              <div className="pinyin-chart-head"><span>Thanh mẫu</span><span>Âm tiết có thể ghép</span><span>Nghe</span></div>
-              {chartRows.map(([initial, syllables]) => <div className="pinyin-chart-row" key={initial}><strong>{initial}</strong><div>{syllables.split(' · ').map((syllable) => <button type="button" key={syllable} onClick={() => speak(syllable)}>{syllable}</button>)}</div><Volume2 className="chart-row-icon" size={15} /></div>)}
+              <div className="pinyin-matrix-scroll" role="region" aria-label="Bảng ghép thanh mẫu và vận mẫu, có thể cuộn ngang" tabIndex={0}>
+                <table className="pinyin-matrix" aria-label="Bảng âm tiết Pinyin">
+                  <thead>
+                    <tr>
+                      <th scope="col" className="pinyin-matrix-corner">
+                        <span>Vận mẫu <span aria-hidden="true">→</span></span>
+                        <span>Thanh mẫu <span aria-hidden="true">↓</span></span>
+                      </th>
+                      {pinyinColumns.map((final) => <th scope="col" key={final}>{final}</th>)}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pinyinMatrix.map(({ initial, byFinal }) => (
+                      <tr key={initial}>
+                        <th scope="row">{initial}</th>
+                        {pinyinColumns.map((final) => {
+                          const syllable = byFinal.get(final)
+                          return (
+                            <td key={final}>
+                              {syllable && <button type="button" onClick={() => speak(syllable)} aria-label={`Nghe ${syllable}`}>{syllable}</button>}
+                            </td>
+                          )
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
             <p className="pronunciation-footnote">Bảng liệt kê những âm tiết Pinyin thông dụng; một số tổ hợp phụ âm và vận mẫu không tạo thành âm tiết hợp lệ.</p>
           </section>}
