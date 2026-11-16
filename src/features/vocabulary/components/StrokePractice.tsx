@@ -35,6 +35,7 @@ function StrokePractice({ character, strokeCount }: StrokePracticeProps) {
       highlightColor: '#d49a60',
       onLoadCharDataError: () => setLoadError(true),
     })
+    target.querySelector('svg')?.setAttribute('viewBox', '0 0 240 240')
     writerRef.current = writer
 
     return () => {
