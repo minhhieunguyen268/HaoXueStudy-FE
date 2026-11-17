@@ -1,4 +1,4 @@
-import { ArrowRight, CircleHelp, Route } from 'lucide-react'
+import { ArrowRight, CircleHelp } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, Navigate, NavLink, useParams } from 'react-router-dom'
 import AppLayout from '../../shared/components/AppLayout'
@@ -25,41 +25,50 @@ function RoadmapOverview() {
   const [answers, setAnswers] = useState<number[] | null>(null)
   const finished = answers?.length === questions.length
   const question = answers && questions[answers.length]
+  const correctCount = answers?.filter((answer, index) => answer === questions[index].answer).length ?? 0
+  const allCorrect = finished && correctCount === questions.length
 
   return (
-    <>
-          <header className="roadmap-hero">
-            <div>
-              <p>華語學習 · TIẾNG TRUNG PHỒN THỂ</p>
-              <h1>Kiểm tra kiến thức và chọn lộ trình phù hợp</h1>
-              <p>Trả lời 3 câu để chọn phần nên bắt đầu trong A1.</p>
-              <div className="roadmap-actions">
-                <button type="button" onClick={() => setAnswers([])}>{answers ? 'Làm lại' : 'Bắt đầu kiểm tra'}</button>
-              </div>
-            </div>
-            <Route aria-hidden="true" size={64} />
-          </header>
-          {question && (
-            <section className="roadmap-check" aria-live="polite">
-              <small>Câu {(answers?.length ?? 0) + 1} / {questions.length}</small>
-              <h2>{question.prompt}</h2>
-              <div className="roadmap-actions">
-                {question.options.map((option, index) => (
-                  <button type="button" key={option} onClick={() => setAnswers((current) => [...(current ?? []), index])}>{option}</button>
-                ))}
-              </div>
-            </section>
-          )}
-          {finished && answers && (
-            <section className="roadmap-check" aria-live="polite">
-              <h2>{answers.filter((answer, index) => answer === questions[index].answer).length} / {questions.length} câu đúng</h2>
-              <p>{answers.every((answer, index) => answer === questions[index].answer)
-                ? 'Bạn có thể bắt đầu với từ vựng và mẫu câu A1.'
-                : 'Bạn có thể bắt đầu với phần phát âm và chào hỏi A1.'}</p>
-              <div className="roadmap-actions"><Link to={answers.every((answer, index) => answer === questions[index].answer) ? '/vocabulary?lesson=1' : '/pronunciation'}>Bắt đầu học <ArrowRight size={14} /></Link></div>
-            </section>
-          )}
-    </>
+    <section className="rm-quiz" aria-live="polite">
+      {!answers && (
+        <div className="rm-quiz-intro">
+          <div>
+            <h2>Kiểm tra nhanh để chọn điểm bắt đầu</h2>
+            <p>Trả lời 3 câu để biết nên bắt đầu từ phần nào trong A1.</p>
+          </div>
+          <button type="button" className="rm-button primary" onClick={() => setAnswers([])}>Bắt đầu kiểm tra</button>
+        </div>
+      )}
+
+      {question && (
+        <div className="rm-quiz-body">
+          <div className="rm-dots" aria-label={`Câu ${answers.length + 1} trên ${questions.length}`}>
+            {questions.map((_, index) => <i key={index} className={index < answers.length ? 'done' : index === answers.length ? 'now' : ''} />)}
+            <small>Câu {answers.length + 1} / {questions.length}</small>
+          </div>
+          <h2 lang="zh-TW">{question.prompt}</h2>
+          <div className="rm-options">
+            {question.options.map((option, index) => (
+              <button type="button" key={option} onClick={() => setAnswers((current) => [...(current ?? []), index])}>{option}</button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {finished && (
+        <div className="rm-quiz-result">
+          <strong className="rm-result-score">{correctCount}<small>/{questions.length}</small></strong>
+          <div>
+            <h2>{allCorrect ? 'Bạn đã sẵn sàng cho A1' : 'Hãy bắt đầu từ nền tảng'}</h2>
+            <p>{allCorrect ? 'Bạn có thể bắt đầu với từ vựng và mẫu câu A1.' : 'Bạn có thể bắt đầu với phần phát âm và chào hỏi A1.'}</p>
+          </div>
+          <div className="rm-result-actions">
+            <Link className="rm-button primary" to={allCorrect ? '/vocabulary?lesson=1' : '/pronunciation'}>Bắt đầu học <ArrowRight size={14} /></Link>
+            <button type="button" className="rm-button" onClick={() => setAnswers([])}>Làm lại</button>
+          </div>
+        </div>
+      )}
+    </section>
   )
 }
 
@@ -79,65 +88,77 @@ export default function RoadmapPage() {
 
   if (!level) return <Navigate to="/roadmap" replace />
 
+  const isA1 = level.code === 'A1'
+
   return (
     <AppLayout>
-      <main className="main-content roadmap-page">
-        <div className="roadmap-content roadmap-layout">
-          <header className="roadmap-page-heading">
+      <main className="main-content rm-page">
+        <div className="rm-content">
+          <header className="rm-header">
             <div>
-              <span className="roadmap-page-kicker">Lộ trình tiếng Trung phồn thể</span>
+              <p>Lộ trình tiếng Trung phồn thể</p>
               <h1>Lộ trình học {level.code}</h1>
-              <p>{level.code === 'A1' ? 'Học từ vựng và ngữ pháp theo từng bài trong Giáo trình Đương Đại 1.' : level.goal}</p>
+              <span>{isA1 ? 'Học từ vựng và ngữ pháp theo từng bài trong Giáo trình Đương Đại 1.' : level.goal}</span>
             </div>
-            <details className="roadmap-guide">
-              <summary><CircleHelp size={17} aria-hidden="true" /> Hướng dẫn</summary>
-              <p>Chọn cấp độ ở mục Chọn chặng học. Với A1, bấm vào từng bài để học từ vựng và xem cấu trúc ngữ pháp cùng ví dụ.</p>
+            <details className="rm-guide">
+              <summary><CircleHelp size={16} aria-hidden="true" /> Hướng dẫn</summary>
+              <p>Chọn cấp độ ở danh sách bên trái. Với A1, bấm vào từng bài để học từ vựng và xem cấu trúc ngữ pháp cùng ví dụ.</p>
             </details>
           </header>
-          {level.code === 'A1' && (
-            <section className="roadmap-placement">
-              <RoadmapOverview />
-            </section>
-          )}
-          <aside className="roadmap-sidebar">
-            <header><h2>Chọn chặng học</h2><p>Tiếng Trung phồn thể</p></header>
-            <nav aria-label="Cấp độ học">
-              {levels.map((item) => (
-                <NavLink key={item.code} to={'/roadmap/' + item.code.toLowerCase()} className={item.code === level.code ? 'is-selected' : ''}>
-                  <span className="roadmap-level-code">{item.code}</span>
-                  <span><strong>{item.title}</strong><small>{item.code === 'A1' ? '15 bài học' : 'Đang chuẩn bị'}</small></span>
-                </NavLink>
-              ))}
-            </nav>
-          </aside>
-          <section className="roadmap-course">
-            <header className="roadmap-course-heading">
-              <span className="roadmap-level-code">{level.code}</span>
-              <div><h2>{level.code === 'A1' ? 'Nền tảng tiếng Trung phồn thể' : level.title}</h2>
-                <p>{level.code === 'A1' ? 'Giáo trình Đương Đại 1 · 15 bài từ vựng và ngữ pháp' : 'Học liệu đang chuẩn bị'}</p>
-              </div>
-            </header>
-            {level.code === 'A1' && <>
-              <ol className="roadmap-lesson-list">
-                {Array.from({ length: 15 }, (_, index) => {
-                  const number = index + 1
-                  const label = 'Bài ' + String(number).padStart(2, '0')
-                  const lesson = lessons.find((item) => item.lessonNumber === number)
-                  const points = grammar?.filter((point) => Number(point.lessonNumber) === number)
-                  return (
-                    <li key={number}>
-                      <span className="roadmap-node" aria-hidden="true">{String(number).padStart(2, '0')}</span>
-                      <Link className="roadmap-lesson roadmap-lesson-link" to={'/roadmap/a1/' + number}>
-                          <span className="roadmap-lesson-label">{label} · Từ vựng và ngữ pháp</span>
-                          <strong>{lesson?.title ?? label}</strong>
-                          <span>{lesson && `${lesson.vocabularyCount} từ vựng · `}{points ? `${points.length} điểm ngữ pháp` : grammarError ? 'Không tải được ngữ pháp' : 'Đang tải ngữ pháp…'}</span>
-                        <span className="roadmap-lesson-label">Vào bài học →</span></Link>
-                    </li>
-                  )
-                })}
-              </ol>
-            </>}
-          </section>
+
+          <div className="rm-layout">
+            <aside className="rm-levels">
+              <h2>Chọn chặng học</h2>
+              <nav aria-label="Cấp độ học">
+                {levels.map((item) => (
+                  <NavLink key={item.code} to={'/roadmap/' + item.code.toLowerCase()} className={item.code === level.code ? 'is-selected' : ''}>
+                    <b>{item.code}</b>
+                    <span><strong>{item.title}</strong><small>{item.code === 'A1' ? '15 bài học' : 'Đang chuẩn bị'}</small></span>
+                  </NavLink>
+                ))}
+              </nav>
+            </aside>
+
+            <div className="rm-main">
+              {isA1 && <RoadmapOverview />}
+
+              <section className="rm-course">
+                <header>
+                  <h2>{isA1 ? 'Nền tảng tiếng Trung phồn thể' : level.title}</h2>
+                  <p>{isA1 ? 'Giáo trình Đương Đại 1 · 15 bài từ vựng và ngữ pháp' : 'Học liệu đang chuẩn bị'}</p>
+                </header>
+
+                {isA1 ? (
+                  <ol className="rm-lessons">
+                    {Array.from({ length: 15 }, (_, index) => {
+                      const number = index + 1
+                      const label = 'Bài ' + String(number).padStart(2, '0')
+                      const lesson = lessons.find((item) => item.lessonNumber === number)
+                      const points = grammar?.filter((point) => Number(point.lessonNumber) === number)
+                      return (
+                        <li key={number}>
+                          <Link to={'/roadmap/a1/' + number}>
+                            <span className="rm-lesson-no" aria-hidden="true">{String(number).padStart(2, '0')}</span>
+                            <span className="rm-lesson-copy">
+                              <small>{label}</small>
+                              <strong>{lesson?.title ?? label}</strong>
+                              <span>{lesson && `${lesson.vocabularyCount} từ vựng · `}{points ? `${points.length} điểm ngữ pháp` : grammarError ? 'Không tải được ngữ pháp' : 'Đang tải ngữ pháp…'}</span>
+                            </span>
+                            <ArrowRight size={18} aria-label="Vào bài học" />
+                          </Link>
+                        </li>
+                      )
+                    })}
+                  </ol>
+                ) : (
+                  <div className="rm-soon">
+                    <p>Nội dung dự kiến của chặng này:</p>
+                    <ul>{level.topics.map((topic) => <li key={topic}>{topic}</li>)}</ul>
+                  </div>
+                )}
+              </section>
+            </div>
+          </div>
         </div>
       </main>
     </AppLayout>
