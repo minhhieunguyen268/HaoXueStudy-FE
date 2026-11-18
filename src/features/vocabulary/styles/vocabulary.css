@@ -74,6 +74,7 @@
 .vocab-panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
 .vocab-panel h3 { margin: 0 0 14px; font-size: 15px; font-weight: 700; }
 .vocab-examples { display: grid; gap: 14px; }
+.vocab-example-sentence { display: flex; align-items: center; gap: 8px; }
 .vocab-examples article { display: grid; gap: 3px; padding-left: 12px; border-left: 3px solid var(--line); }
 .vocab-examples strong { font-family: var(--font-zh); font-size: 20px; font-weight: 500; line-height: 1.5; }
 .vocab-examples span { color: var(--jade); font-size: 14px; }

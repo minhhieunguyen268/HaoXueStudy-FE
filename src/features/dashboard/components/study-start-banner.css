@@ -1,0 +1,35 @@
+.promo-slide.promo-slide-study { padding: 0; align-items: stretch; }
+.study-start-banner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: clamp(18px, 3vw, 40px);
+  width: 100%;
+  padding: 16px 22px 44px;
+  background: radial-gradient(ellipse at 60% 0, #ffb17c88, transparent 60%),
+    linear-gradient(115deg, #ff795b, #ee543e 60%, #944124);
+  color: #fff;
+  box-shadow: 0 12px 30px #dc5a3922;
+}
+.study-start-copy { display: flex; flex-direction: column; align-items: flex-start; }
+.study-start-label { display: inline-flex; align-items: center; gap: 6px; border-radius: 20px; background: #ffffff26; padding: 5px 10px; font-size: 11px; font-weight: 700; }
+.study-start-copy h2 { margin: 10px 0 4px; color: #fff; font-size: clamp(21px, 2.5vw, 30px); letter-spacing: -.03em; }
+.study-start-copy > p { margin: 0; font-size: 12px; }
+.study-start-action { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; width: 100%; margin-top: auto; padding: 12px; border: 1px solid #ffffff50; border-radius: 18px; background: #70281988; }
+.study-start-action > span { flex: 1; font-size: 12px; font-weight: 700; }
+.study-start-action a { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-width: 130px; padding: 11px 16px; border-radius: 24px; background: #fff; color: #b93727; font-weight: 800; font-size: 13px; }
+.study-start-daily { padding: 20px; border: 1px solid #ffd09580; border-radius: 20px; background: #38201688; }
+.study-start-daily-heading { display: flex; align-items: center; gap: 10px; }
+.study-start-flame { display: grid; flex-shrink: 0; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: #fff; color: #e9632c; }
+.study-start-daily-heading strong { font-size: 13px; }
+.study-start-daily-heading small { display: block; margin-top: 3px; color: #f2d4bf; font-size: 11px; }
+.study-start-week { display: flex; justify-content: space-between; gap: 8px; margin: 20px 0 12px; }
+.study-start-week > span { display: grid; justify-items: center; gap: 4px; color: #efd2bc; }
+.study-start-week small { font-size: 10px; }
+.study-start-daily p { margin: 12px 0; padding-top: 12px; border-top: 1px solid #ffffff35; font-size: 12px; }
+.study-start-daily > a { display: inline-flex; align-items: center; gap: 7px; color: #fff; font-size: 12px; font-weight: 700; }
+.study-start-banner a:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+@media (min-width: 701px) { .study-start-copy > p { margin-bottom: 50px; } }
+@media (max-width: 700px) {
+  .study-start-banner { grid-template-columns: 1fr; padding: 16px 16px 44px; }
+  .study-start-action { margin-top: 24px; }
+}

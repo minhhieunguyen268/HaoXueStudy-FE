@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import AppLayout from '../../shared/components/AppLayout'
 import SpeakButton from '../vocabulary/components/SpeakButton'
+import { useLessonProgress } from './lessonProgress'
 import { useCourseGrammar, type GrammarPoint } from './useCourseGrammar'
 import './roadmap-lesson.css'
 
@@ -20,8 +21,19 @@ function Lesson({ number }: { number: number }) {
   const { grammar, error } = useCourseGrammar()
   const points = grammar?.filter((point) => Number(point.lessonNumber) === number) ?? []
   const [answers, setAnswers] = useState<Record<number, string>>({})
+  const [step, setStep] = useState(0)
+  const { completed, finish } = useLessonProgress()
+  const point = points[step]
+  const practicing = points.length > 0 && step === points.length
   const answered = Object.keys(answers).length
   const score = points.filter((point, index) => answers[index] === point.pattern).length
+  if (number > completed + 1) return <Navigate to={'/roadmap/a1/' + (completed + 1)} replace />
+
+  function choose(index: number, pattern: string) {
+    const next = { ...answers, [index]: pattern }
+    if (Object.keys(next).length === points.length) finish(number)
+    setAnswers(next)
+  }
 
   return (
     <AppLayout>
@@ -45,8 +57,8 @@ function Lesson({ number }: { number: number }) {
             <nav className="lesson-steps" aria-label="Các bước học">
               <ol>
                 <li><a href="#lesson-vocab"><b>1</b>Từ mới</a></li>
-                <li><a href="#lesson-grammar"><b>2</b>Cấu trúc và ví dụ</a></li>
-                <li><a href="#lesson-practice"><b>3</b>Luyện tập</a></li>
+                <li><a href="#lesson-grammar" onClick={() => { if (practicing) setStep(points.length - 1) }}><b>2</b>Cấu trúc và ví dụ</a></li>
+                <li>{practicing ? <a href="#lesson-practice"><b>3</b>Luyện tập</a> : <span className="lesson-step-pending"><b>3</b>Luyện tập</span>}</li>
               </ol>
             </nav>
 
@@ -59,14 +71,15 @@ function Lesson({ number }: { number: number }) {
                 <Link className="lesson-button primary" to={'/vocabulary?lesson=' + number}>Học từ vựng {label.toLowerCase()}</Link>
               </section>
 
-              <section id="lesson-grammar" className="lesson-section">
+              {!practicing && <section id="lesson-grammar" className="lesson-section">
                 <h2>Cấu trúc và ví dụ</h2>
                 {error ? <p className="lesson-note error" role="alert">Không tải được ngữ pháp. Hãy tải lại trang để thử lại.</p>
                   : !grammar ? <p className="lesson-note" role="status">Đang tải ngữ pháp…</p>
                   : points.length === 0 && <p className="lesson-note">Bài này chưa có ngữ pháp.</p>}
 
-                {points.map((point, index) => (
-                  <article key={index} className="lesson-card lesson-grammar">
+                {point && (
+                  <article key={step} className="lesson-card lesson-grammar">
+                    <small>Cấu trúc {step + 1} / {points.length}</small>
                     <h3>{point.title}</h3>
                     <div className="lesson-pattern" lang="zh-TW">{point.pattern}</div>
                     <p className="lesson-usage">{point.description}</p>
@@ -82,16 +95,22 @@ function Lesson({ number }: { number: number }) {
                         </li>
                       ))}
                     </ul>
+                    <div className="lesson-footer">
+                      <button type="button" className="lesson-button" disabled={step === 0} onClick={() => setStep(step - 1)}>Quay lại</button>
+                      <button type="button" className="lesson-button primary" onClick={() => setStep(step + 1)}>
+                        {step + 1 === points.length ? 'Bắt đầu luyện tập' : 'Cấu trúc tiếp theo →'}
+                      </button>
+                    </div>
                   </article>
-                ))}
-              </section>
+                )}
+              </section>}
 
-              {points.length > 0 && (
+              {practicing && (
                 <section id="lesson-practice" className="lesson-section">
                   <div className="lesson-practice-head">
                     <div>
                       <h2>Luyện tập</h2>
-                      <p>Chọn cấu trúc phù hợp với mục đích sử dụng.</p>
+                      <p>Chọn cấu trúc phù hợp cho từng câu. Trả lời đủ các câu để hoàn thành bài.</p>
                     </div>
                     <div className="lesson-score" aria-live="polite">
                       <strong>{score}/{points.length}</strong>
@@ -112,7 +131,7 @@ function Lesson({ number }: { number: number }) {
                           {alternatives.map((pattern) => {
                             const state = !chosen ? '' : pattern === point.pattern ? 'correct' : pattern === chosen ? 'wrong' : ''
                             return (
-                              <button key={pattern} type="button" lang="zh-TW" className={state} aria-pressed={chosen === pattern} onClick={() => setAnswers((current) => ({ ...current, [index]: pattern }))}>
+                              <button key={pattern} type="button" lang="zh-TW" className={state} aria-pressed={chosen === pattern} onClick={() => choose(index, pattern)}>
                                 {pattern}
                               </button>
                             )
@@ -130,7 +149,9 @@ function Lesson({ number }: { number: number }) {
 
                   <div className="lesson-footer">
                     <button type="button" className="lesson-button" onClick={() => setAnswers({})}>Làm lại</button>
-                    {number < 15 && <Link className="lesson-button primary" to={'/roadmap/a1/' + (number + 1)}>Bài tiếp theo →</Link>}
+                    {completed >= number
+                      ? <Link className="lesson-button primary" to={number < 15 ? '/roadmap/a1/' + (number + 1) : '/roadmap/a1'}>{number < 15 ? 'Bài tiếp theo →' : 'Hoàn thành A1 · Về lộ trình'}</Link>
+                      : <button type="button" className="lesson-button" disabled>{number < 15 ? 'Bài tiếp theo →' : 'Hoàn thành A1'}</button>}
                   </div>
                 </section>
               )}

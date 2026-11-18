@@ -209,12 +209,15 @@ function VocabularyPage() {
 
                   <div className="vocab-panels">
                     <section className="vocab-panel">
-                      <h3>Ví dụ trong câu</h3>
+                      <h3>Ví dụ với <span lang="zh-TW">{selectedWord.traditional}</span></h3>
                       {selectedWord.examples.length ? (
                         <div className="vocab-examples">
                           {selectedWord.examples.map((example) => (
                             <article key={example.id}>
-                              <strong>{example.sentenceTraditional}</strong>
+                              <div className="vocab-example-sentence">
+                                <strong lang="zh-TW">{example.sentenceTraditional}</strong>
+                                {!example.audioUrl && <SpeakButton compact text={example.sentenceTraditional} />}
+                              </div>
                               {example.sentencePinyin && <span>{example.sentencePinyin}</span>}
                               {example.sentenceZhuyin && <small>{example.sentenceZhuyin}</small>}
                               <p>{example.meaningVi}</p>

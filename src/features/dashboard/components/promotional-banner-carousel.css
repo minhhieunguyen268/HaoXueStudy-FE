@@ -53,10 +53,10 @@
 @media(max-width:800px){.promo-art-card{transform:translateX(-28px) rotate(4deg) scale(.8)}.promo-slide-peach .promo-art-card{transform:translateX(-28px) rotate(-4deg) scale(.8)}.promo-slide-blue .promo-art-card{transform:translateX(-24px) rotate(3deg) scale(.82)}}
 @media(max-width:560px){.promo-art{opacity:.58}.promo-art-card{transform:translateX(-25px) rotate(4deg) scale(.67)}.promo-slide-peach .promo-art-card{transform:translateX(-25px) rotate(-4deg) scale(.67)}.promo-slide-blue .promo-art-card{transform:translateX(-23px) rotate(3deg) scale(.7)}}
 
-/* Fade between real slides; no off-screen clones to leave the banner empty. */
-.promo-track{position:relative;display:block;min-height:184px;transform:none}
-.promo-slide{position:absolute;inset:0;display:flex;flex:none;opacity:0;visibility:hidden;pointer-events:none;transform:translateX(12px);transition:opacity .42s ease,transform .42s ease,visibility .42s}
-.promo-slide.is-active{position:relative;inset:auto;z-index:1;opacity:1;visibility:visible;pointer-events:auto;transform:translateX(0)}
+/* Overlap the slides so the tallest one sizes the shared grid row. */
+.promo-track{display:grid;grid-template-columns:minmax(0,1fr);min-height:184px;transform:none}
+.promo-slide{grid-area:1 / 1;opacity:0;visibility:hidden;pointer-events:none;transform:translateX(12px);transition:opacity .42s ease,transform .42s ease,visibility .42s}
+.promo-slide.is-active{z-index:1;opacity:1;visibility:visible;pointer-events:auto;transform:translateX(0)}
 @media(max-width:800px){.promo-track{min-height:176px}}
 @media(max-width:560px){.promo-track{min-height:193px}}
 @media(prefers-reduced-motion:reduce){.promo-slide{transition:none}}

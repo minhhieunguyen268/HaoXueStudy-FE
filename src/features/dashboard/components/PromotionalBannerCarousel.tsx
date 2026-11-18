@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import './promotional-banner-carousel.css'
+import StudyStartBanner from './StudyStartBanner'
 
 const slides = [
   {
@@ -28,6 +29,7 @@ const slides = [
     theme: 'blue',
     art: <><span className="promo-hello">你好</span><span className="promo-art-label">nǐ hǎo · xin chào</span></>,
   },
+  { theme: 'study', content: <StudyStartBanner /> },
 ]
 
 function PromotionalBannerCarousel() {
@@ -82,6 +84,7 @@ function PromotionalBannerCarousel() {
                 aria-label={`${index + 1} trên ${slides.length}`}
                 inert={!isActive}
               >
+                {slide.content ?? (<>
                 <div className="promo-copy">
                   <span className="promo-eyebrow"><i /><span>{slide.eyebrow}</span></span>
                   <h2>{slide.title}</h2>
@@ -97,6 +100,7 @@ function PromotionalBannerCarousel() {
                   <span className="promo-art-spark promo-art-spark-two">✳</span>
                   <div className="promo-art-card">{slide.art}</div>
                 </div>
+                </>)}
               </article>
             )
           })}

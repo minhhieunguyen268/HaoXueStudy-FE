@@ -5,6 +5,7 @@ import AppLayout from '../../shared/components/AppLayout'
 import { getVocabularyLessons, type VocabularyLesson } from '../vocabulary/api/vocabularyApi'
 import { useCourseGrammar } from './useCourseGrammar'
 import './roadmap.css'
+import { useLessonProgress } from './lessonProgress'
 
 const levels = [
   { code: 'A1', title: 'Làm quen', goal: 'Phát âm rõ và giao tiếp bằng những câu đơn giản.', topics: ['Thanh điệu và Pinyin', 'Chào hỏi và giới thiệu bản thân', 'Từ vựng Giáo trình Đương Đại 1'] },
@@ -73,6 +74,7 @@ function RoadmapOverview() {
 }
 
 export default function RoadmapPage() {
+  const { completed } = useLessonProgress()
   const { level: levelParam } = useParams()
   const level = levels.find(({ code }) => code.toLowerCase() === (levelParam ?? 'a1').toLowerCase())
   const [lessons, setLessons] = useState<VocabularyLesson[]>([])
@@ -135,12 +137,18 @@ export default function RoadmapPage() {
                       const label = 'Bài ' + String(number).padStart(2, '0')
                       const lesson = lessons.find((item) => item.lessonNumber === number)
                       const points = grammar?.filter((point) => Number(point.lessonNumber) === number)
+                      if (number > completed + 1) return (
+                        <li key={number}><div className="rm-locked-lesson">
+                          <span className="rm-lesson-no">{String(number).padStart(2, '0')}</span>
+                          <span className="rm-lesson-copy"><strong>{lesson?.title ?? label}</strong><small>Mở sau khi hoàn thành bài {number - 1}</small></span>
+                        </div></li>
+                      )
                       return (
                         <li key={number}>
                           <Link to={'/roadmap/a1/' + number}>
                             <span className="rm-lesson-no" aria-hidden="true">{String(number).padStart(2, '0')}</span>
                             <span className="rm-lesson-copy">
-                              <small>{label}</small>
+                              <small>{label}{number <= completed && ' · Đã hoàn thành'}</small>
                               <strong>{lesson?.title ?? label}</strong>
                               <span>{lesson && `${lesson.vocabularyCount} từ vựng · `}{points ? `${points.length} điểm ngữ pháp` : grammarError ? 'Không tải được ngữ pháp' : 'Đang tải ngữ pháp…'}</span>
                             </span>
