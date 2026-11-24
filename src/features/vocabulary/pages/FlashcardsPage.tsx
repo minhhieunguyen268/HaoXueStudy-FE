@@ -72,8 +72,8 @@ function LessonFlashcards({ lesson }: { lesson: number }) {
 
   return (
     <AppLayout>
-      <main className="main-content flashcards-page">
-        <div className="flashcards-content">
+      <main className="flashcards-page">
+        <div className="page-container flashcards-content">
           <Link className="flashcards-back" to={'/vocabulary?lesson=' + lesson}><ArrowLeft size={17} /> Từ vựng bài {lesson}</Link>
           <header><p>Giáo trình Đương Đại 1 · Bài {lesson}</p><h1>Thẻ ghi nhớ</h1></header>
           {error ? <div role="alert">

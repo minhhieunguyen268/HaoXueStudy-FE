@@ -1,4 +1,4 @@
-.ai-assistant-widget{position:fixed;right:26px;bottom:24px;z-index:40;font-family:'DM Sans',sans-serif}
+.ai-assistant-widget{position:fixed;right:26px;bottom:24px;z-index:40;font-family:var(--font-ui)}
 .ai-assistant-launcher{display:flex;width:68px;height:68px;min-height:68px;align-items:center;justify-content:center;padding:2px;border:2px solid #fff;border-radius:50%;background:radial-gradient(circle at 32% 26%,#fff,#e3f1df 76%,#d7e8d2);color:#fff;box-shadow:0 8px 25px #244b3640;transition:transform .18s ease,box-shadow .18s ease}
 .ai-assistant-launcher:hover{transform:translateY(-2px);box-shadow:0 11px 28px #244b3655}
 .ai-assistant-launcher.is-open{width:46px;height:46px;min-height:46px;padding:0;border:0;background:linear-gradient(135deg,#315d40,#244b36)}

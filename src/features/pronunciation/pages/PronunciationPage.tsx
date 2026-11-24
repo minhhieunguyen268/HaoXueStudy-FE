@@ -183,8 +183,8 @@ function PronunciationPage() {
 
   return (
     <AppLayout>
-      <main className="main-content pronunciation-page">
-        <div className="pronunciation-content">
+      <main className="pronunciation-page">
+        <div className="page-container pronunciation-content">
           <section className="pronunciation-hero">
             <div className="pronunciation-hero-copy">
               <span className="pronunciation-eyebrow"><AudioLines size={14} /> PHÁT ÂM · PINYIN</span>

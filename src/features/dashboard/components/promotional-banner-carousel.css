@@ -8,7 +8,7 @@
 .promo-copy{position:relative;z-index:2;max-width:61%;}
 .promo-eyebrow{display:flex;align-items:center;gap:8px;color:var(--promo-muted);font-size:9px;font-weight:800;letter-spacing:1.15px}
 .promo-eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--promo-accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--promo-accent) 12%,transparent)}
-.promo-copy h2{margin:12px 0 7px;color:var(--promo-ink);font-family:Manrope,'DM Sans',sans-serif;font-size:24px;font-weight:800;line-height:1.18;letter-spacing:-.8px}
+.promo-copy h2{margin:12px 0 7px;color:var(--promo-ink);font-family:var(--font-ui);font-size:24px;font-weight:800;line-height:1.18;letter-spacing:-.8px}
 .promo-copy p{margin:0 0 14px;color:var(--promo-muted);font-size:11px;line-height:1.5}
 .promo-cta{display:inline-flex;align-items:center;gap:14px;min-height:32px;padding:0 12px;border-radius:7px;background:var(--promo-accent);color:#fff;font-size:10px;font-weight:700;box-shadow:0 4px 10px color-mix(in srgb,var(--promo-accent) 24%,transparent);transition:transform .18s ease,box-shadow .18s ease}
 .promo-cta:hover{color:#fff;transform:translateY(-1px);box-shadow:0 7px 14px color-mix(in srgb,var(--promo-accent) 30%,transparent)}
@@ -23,13 +23,13 @@
 .promo-art-spark-two{left:28px;bottom:29px;font-size:13px}
 .promo-art-card{position:relative;width:112px;height:124px;border:1px solid #ffffffb5;border-radius:17px;background:linear-gradient(145deg,#ffffffed,#ffffffe0);box-shadow:0 15px 32px #34483218;display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(4deg);color:var(--promo-accent)}
 .promo-art-card>svg{position:absolute;top:11px;right:11px;width:15px;height:15px;stroke-width:1.8;opacity:.62}
-.promo-character-main{font-family:'Noto Serif SC',serif;font-size:58px;font-weight:700;line-height:1.05}
-.promo-character-small{position:absolute;right:-15px;bottom:20px;display:grid;place-items:center;width:43px;height:45px;border:1px solid #ffffffb5;border-radius:12px;background:var(--promo-pale);box-shadow:0 8px 18px #3448321a;font-family:'Noto Serif SC',serif;font-size:23px;transform:rotate(8deg)}
+.promo-character-main{font-family:var(--font-zh);font-size:58px;font-weight:700;line-height:1.05}
+.promo-character-small{position:absolute;right:-15px;bottom:20px;display:grid;place-items:center;width:43px;height:45px;border:1px solid #ffffffb5;border-radius:12px;background:var(--promo-pale);box-shadow:0 8px 18px #3448321a;font-family:var(--font-zh);font-size:23px;transform:rotate(8deg)}
 .promo-art-label{margin-top:7px;color:var(--promo-muted);font-size:8px;letter-spacing:.3px}
 .promo-slide-peach .promo-art-card{transform:rotate(-4deg)}
 .promo-slide-peach .promo-character-main{font-size:53px}
 .promo-slide-blue .promo-art-card{width:148px;height:110px;transform:rotate(3deg)}
-.promo-hello{font-family:'Noto Serif SC',serif;font-size:33px;font-weight:700;letter-spacing:4px}
+.promo-hello{font-family:var(--font-zh);font-size:33px;font-weight:700;letter-spacing:4px}
 .promo-soundwave{height:17px;display:flex;align-items:center;gap:3px;margin-top:4px}
 .promo-soundwave i{display:block;width:3px;height:8px;border-radius:4px;background:var(--promo-accent);opacity:.7}
 .promo-soundwave i:nth-child(2),.promo-soundwave i:nth-child(6){height:13px}

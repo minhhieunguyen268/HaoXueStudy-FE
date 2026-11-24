@@ -38,7 +38,7 @@
 .vocab-practice-pending { border: 1px solid var(--line); color: var(--ink-soft); }
 .vocab-practice-pending small { font-size: 11px; }
 .flashcards-page { background: #fff; color: #192641; min-height: 100vh; }
-.flashcards-content { width: min(calc(100% - 28px), 940px); margin: auto; padding: 28px 0 48px; }
+
 .flashcards-content header p { color: #526078; margin: 18px 0 4px; }
 .flashcards-content h1 { margin: 0 0 18px; }
 .flashcards-back { display: inline-flex; align-items: center; gap: 8px; color: #315d40; }

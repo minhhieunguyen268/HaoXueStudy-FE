@@ -71,8 +71,8 @@ function ProfilePage() {
 
   return (
     <AppLayout>
-    <main className="main-content profile-page">
-      <section className="profile-page-content mx-auto w-full max-w-3xl px-5" aria-labelledby="profile-page-title">
+    <main className="profile-page">
+      <section className="page-container profile-page-content" aria-labelledby="profile-page-title">
         <div className="profile-page-heading">
           <span className="eyebrow">TÀI KHOẢN HAOXUESTUDY</span>
           <h1 id="profile-page-title">Thông tin cá nhân</h1>

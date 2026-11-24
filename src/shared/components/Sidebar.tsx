@@ -1,4 +1,4 @@
-import { AudioLines, BookOpen, House, Languages, MessageCircle, PanelLeftClose, PanelLeftOpen, Plane, School, Utensils } from 'lucide-react'
+import { AudioLines, BookOpen, House, Languages, Map, MessageCircle, PanelLeftClose, PanelLeftOpen, Plane, School, Utensils } from 'lucide-react'
 import { Link, NavLink } from 'react-router-dom'
 import type { AuthUser } from '../../features/auth/api/authApi'
 import UserAvatar from './UserAvatar'
@@ -34,14 +34,14 @@ function Sidebar({ user, collapsed, activeSection, onToggle, onSectionSelect }: 
         <NavLink end className={({ isActive }) => `nav-item ${(activeSection === undefined ? isActive : activeSection === 'Tổng quan') ? 'selected' : ''}`} to="/">
           <House className="nav-icon" aria-hidden="true" /><span>Tổng quan</span>
         </NavLink>
-        <button className={`nav-item ${activeSection === 'Bài học' ? 'selected' : ''}`} onClick={() => onSectionSelect?.('Bài học')}>
-          <BookOpen className="nav-icon" aria-hidden="true" /><span>Bài học</span><span className="nav-count">6</span>
-        </button>
+        <NavLink to="/roadmap" className={({ isActive }) => `nav-item ${isActive ? 'selected' : ''}`}>
+          <Map className="nav-icon" aria-hidden="true" /><span>Lộ trình</span>
+        </NavLink>
         <NavLink className={({ isActive }) => `nav-item ${(activeSection === undefined ? isActive : activeSection === 'Từ vựng') ? 'selected' : ''}`} to="/vocabulary">
           <Languages className="nav-icon" aria-hidden="true" /><span>Từ vựng</span><span className="nav-count">8</span>
         </NavLink>
-        <NavLink aria-label="Lộ trình" className={({ isActive }) => `nav-item ${isActive ? 'selected' : ''}`} to="/roadmap">
-          <BookOpen className="nav-icon" aria-hidden="true" /><span>Lộ trình</span>
+        <NavLink aria-label="Bài học" className={({ isActive }) => `nav-item ${isActive ? 'selected' : ''}`} to="/lession">
+          <BookOpen className="nav-icon" aria-hidden="true" /><span>Bài học</span>
         </NavLink>
         <NavLink className={({ isActive }) => `nav-item ${(activeSection === undefined ? isActive : activeSection === 'Phát âm') ? 'selected' : ''}`} to="/pronunciation">
           <AudioLines className="nav-icon" aria-hidden="true" /><span>Phát âm</span>
@@ -56,7 +56,7 @@ function Sidebar({ user, collapsed, activeSection, onToggle, onSectionSelect }: 
         ))}
       </nav>
       <div className="sidebar-bottom">
-        <div className="help-card"><div className="help-art">✦</div><strong>Lộ trình học tiếng Trung</strong><p>A1–C2 · Hoa ngữ phồn thể</p><Link to="/roadmap" className="text-link">Xem lộ trình <span aria-hidden="true">→</span></Link></div>
+        <div className="help-card"><div className="help-art">✦</div><strong>Bài học tiếng Trung</strong><p>A1–C2 · Hoa ngữ phồn thể</p><Link to="/lession" className="text-link">Xem bài học <span aria-hidden="true">→</span></Link></div>
         <Link className="profile" to="/profile" title="Xem hồ sơ"><UserAvatar className="avatar" avatarUrl={user?.avatarUrl} alt="Ảnh đại diện" /><span className="profile-copy"><strong>{user?.name || user?.username || 'Học viên'}</strong><small>{user?.email || '繁體中文 · TOCFL A1'}</small></span><span className="profile-more">↗</span></Link>
       </div>
     </aside>

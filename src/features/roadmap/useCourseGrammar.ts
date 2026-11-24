@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react'
 import api from '../../shared/lib/api'
 
+export interface GrammarExample {
+  text: string
+  simplified?: string
+  pinyin?: string
+  translation?: string
+  note?: string
+}
+
 interface GrammarPoint {
   lessonNumber: number
   title: string
@@ -9,6 +17,7 @@ interface GrammarPoint {
   example: string | null
   examplePinyin: string | null
   translation: string | null
+  details?: { englishTitle: string; notes: string; examples: GrammarExample[] } | null
 }
 
 export function useCourseGrammar(enabled = true) {

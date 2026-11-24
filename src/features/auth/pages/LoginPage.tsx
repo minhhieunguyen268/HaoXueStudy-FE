@@ -1,3 +1,4 @@
+import Topbar from '../../../shared/components/Topbar'
 import axios from 'axios'
 import { useState, type FormEvent } from 'react'
 import { Alert, Button, Input } from 'antd'
@@ -50,7 +51,7 @@ function LoginPage() {
   }
 
   return (
-    <main className="login-page">
+    <><Topbar /><main className="login-page">
       <section className="login-card" aria-labelledby="login-title">
         <Link className="login-brand" to="/" aria-label="HaoXueStudy trang chủ">
           <img src={logo} alt="" />
@@ -108,7 +109,7 @@ function LoginPage() {
           <div className="login-aside-note"><span>學</span><div><strong>Học tập chăm chỉ</strong><small>Tiến bộ từng ngày</small></div></div>
         </div>
       </aside>
-    </main>
+    </main></>
   )
 }
 

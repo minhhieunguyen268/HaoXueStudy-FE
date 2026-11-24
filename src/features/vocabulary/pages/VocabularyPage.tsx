@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Alert, Button, Input, Spin, Tag } from 'antd'
-import { ChevronLeft, ChevronRight, Search } from 'lucide-react'
+import { Alert, Button, ConfigProvider, Input, Select, Spin, Tag } from 'antd'
+import { BookOpen, ChevronLeft, ChevronRight, Search } from 'lucide-react'
 import AppLayout from '../../../shared/components/AppLayout'
 import { getVocabulary, getVocabularyBooks, getVocabularyLessons, type VocabularyItem, type VocabularyLesson } from '../api/vocabularyApi'
 import SpeakButton from '../components/SpeakButton'
@@ -58,12 +58,7 @@ function VocabularyPage() {
     let active = true
     if (isCurriculumLoading || error) return () => { active = false }
 
-    if (!selectedLessonData) {
-      setItems([])
-      setTotal(0)
-      setIsLoading(false)
-      return () => { active = false }
-    }
+    if (!selectedLessonData) return
 
     getVocabulary({ q: query || undefined, bookCode: BOOK_ONE.code, lessonNumber: selectedLesson, page: 1, pageSize: 50 })
       .then((result) => {
@@ -79,7 +74,7 @@ function VocabularyPage() {
       .finally(() => { if (active) setIsLoading(false) })
 
     return () => { active = false }
-  }, [query, selectedLesson, selectedLessonData?.id, isCurriculumLoading, error])
+  }, [query, selectedLesson, selectedLessonData, isCurriculumLoading, error])
 
   const selectedWord = useMemo(
     () => items.find((item) => item.id === selectedId) ?? items[0] ?? null,
@@ -107,6 +102,8 @@ function VocabularyPage() {
     const next = Math.min(BOOK_ONE.lessonCount, Math.max(1, lesson))
     if (next === selectedLesson) return
     setIsLoading(true)
+    setItems([])
+    setQuery('')
     setSelectedLesson(next)
   }
 
@@ -114,52 +111,59 @@ function VocabularyPage() {
 
   return (
     <AppLayout>
-      <main className="main-content vocabulary-page">
-        <div className="vocabulary-content">
-          {/* Header + level */}
+      <main className="vocabulary-page">
+        <div className="page-container vocabulary-content">
           <header className="vocab-header">
             <div>
-              <h1>Từ vựng tiếng Trung phồn thể</h1>
-              <p>{isBookOne ? `${BOOK_ONE.title} · học theo từng bài, nghe phát âm và tập viết từng nét.` : 'Giáo trình cho cấp độ này đang được chuẩn bị.'}</p>
-            </div>
-            <div className="vocab-levels" role="group" aria-label="Cấp độ từ vựng">
-              {vocabularyLevels.map((item) => (
-                <button key={item} type="button" aria-pressed={level === item} disabled={item !== 'A1'} onClick={() => setLevel(item)}>{item}</button>
-              ))}
+              <span className="vocab-book-label"><BookOpen size={16} aria-hidden="true" /> Tiếng Trung phồn thể</span>
+              <h1>Từ vựng theo giáo trình</h1>
+              <p>Chọn một bài để nghe phát âm, đọc ví dụ và luyện viết từng nét.</p>
             </div>
           </header>
+          <div className="vocab-levels" role="group" aria-label="Cấp độ theo giáo trình">
+            {vocabularyLevels.map((item) => (
+              <button key={item} type="button" aria-pressed={level === item} onClick={() => setLevel(item)}>
+                <strong>{item}</strong><span>{item === 'A1' ? 'Đương Đại 1' : 'Đang chuẩn bị'}</span>
+              </button>
+            ))}
+          </div>
 
-          {isBookOne && <>
-            {/* Lesson rail */}
+          {isBookOne ? <>
             <section className="vocab-lessons" aria-label="Chọn bài học">
               <div className="vocab-lessons-top">
-                <div>
-                  <strong>Bài {selectedLesson}</strong>
-                  <span>{selectedLessonData?.title || 'Chọn bài học'}</span>
+                <div className="vocab-book-info">
+                  <small>{BOOK_ONE.title} · {BOOK_ONE.lessonCount} bài</small>
+                  <h2>{selectedLessonData?.title || ('Bài ' + selectedLesson)}</h2>
+                  {selectedLessonData && <span>Bài {String(selectedLesson).padStart(2, '0')} · {selectedLessonData.vocabularyCount} từ vựng</span>}
                 </div>
                 <div className="vocab-lessons-nav">
-                  <small>{isLoading ? '…' : total} từ trong bài</small>
                   <button type="button" disabled={selectedLesson <= 1} onClick={() => goToLesson(selectedLesson - 1)} aria-label="Bài trước"><ChevronLeft size={18} /></button>
+                  <ConfigProvider theme={{ components: { Select: {
+                    colorBgContainer: '#fff', colorBgElevated: '#fff', colorText: '#183d36',
+                    colorTextQuaternary: '#566d64', optionSelectedBg: '#e1f3ed',
+                    optionSelectedColor: '#183d36', optionActiveBg: '#f2f6f3',
+                  } } }}>
+                    <Select<number>
+                      className="vocab-lesson-picker"
+                      aria-label="Chọn bài học"
+                      value={selectedLesson}
+                      onChange={goToLesson}
+                      placement="bottomLeft"
+                      listHeight={160}
+                      options={Array.from({ length: BOOK_ONE.lessonCount }, (_, index) => ({
+                        value: index + 1, label: 'Bài ' + String(index + 1).padStart(2, '0'),
+                      }))}
+                    />
+                  </ConfigProvider>
                   <button type="button" disabled={selectedLesson >= BOOK_ONE.lessonCount} onClick={() => goToLesson(selectedLesson + 1)} aria-label="Bài tiếp theo"><ChevronRight size={18} /></button>
                 </div>
               </div>
-              <div className="vocab-chips">
-                {Array.from({ length: BOOK_ONE.lessonCount }, (_, index) => {
-                  const lesson = index + 1
-                  return (
-                    <button key={lesson} type="button" className={lesson === selectedLesson ? 'active' : lesson < selectedLesson ? 'done' : ''} aria-current={lesson === selectedLesson ? 'true' : undefined} onClick={() => goToLesson(lesson)}>
-                      {lesson}
-                    </button>
-                  )
-                })}
-              </div>
             </section>
-
             {error ? (
               <Alert type="error" showIcon message={error} action={<Button type="link" onClick={() => window.location.reload()}>Thử lại</Button>} />
-            ) : (isLoading || isCurriculumLoading) && items.length === 0 ? (
+            ) : isCurriculumLoading || (selectedLessonData && isLoading && items.length === 0) ? (
               <div className="vocab-state"><Spin size="large" /><span>Đang tải từ vựng...</span></div>
-            ) : items.length === 0 ? (
+            ) : !selectedLessonData || items.length === 0 ? (
               <div className="vocab-state empty">
                 <span className="vocab-state-zh">第 {selectedLesson} 課</span>
                 <h2>{selectedLessonData ? (query ? 'Không tìm thấy từ phù hợp' : 'Bài này chưa có từ vựng') : 'Chưa tìm thấy bài học này'}</h2>
@@ -167,11 +171,13 @@ function VocabularyPage() {
                 {query && <Button onClick={() => setQuery('')}>Xóa tìm kiếm</Button>}
               </div>
             ) : selectedWord && (<>
+
               <VocabularyPractice lesson={selectedLesson} />
               <div className="vocab-workspace">
                 {/* Word list */}
                 <aside className="vocab-list">
-                  <Input className="vocab-search" prefix={<Search size={16} />} value={query} onChange={(event) => { setIsLoading(true); setQuery(event.target.value) }} placeholder="Tìm chữ, pinyin hoặc nghĩa" allowClear />
+                  <div className="vocab-list-heading"><h2>Danh sách từ</h2><span>{total} từ</span></div>
+                  <Input aria-label="Tìm chữ, pinyin hoặc nghĩa" className="vocab-search" prefix={<Search size={16} />} value={query} onChange={(event) => { setIsLoading(true); setQuery(event.target.value) }} placeholder="Tìm chữ, pinyin hoặc nghĩa" allowClear />
                   <div className="vocab-rows">
                     {items.map((item) => (
                       <div className={`vocab-row ${selectedWord.id === item.id ? 'selected' : ''}`} key={item.id}>
@@ -189,7 +195,7 @@ function VocabularyPage() {
                 <section className="vocab-detail" aria-live="polite">
                   <div className="vocab-hero">
                     <div className="vocab-grid-box" aria-hidden="true">
-                      <span>{selectedWord.traditional}</span>
+                      <span lang="zh-TW">{selectedWord.traditional}</span>
                     </div>
                     <div className="vocab-hero-copy">
                       <div className="vocab-pron">
@@ -245,7 +251,7 @@ function VocabularyPage() {
                 </section>
               </div>
             </>)}
-          </>}
+          </> : <section className="vocab-state"><BookOpen size={28} aria-hidden="true" /><h2>Từ vựng {level}</h2><p>Giáo trình cho cấp độ này đang được chuẩn bị.</p></section>}
         </div>
       </main>
     </AppLayout>
