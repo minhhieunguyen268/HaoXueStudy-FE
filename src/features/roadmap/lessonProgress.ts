@@ -8,6 +8,7 @@ interface Checkpoint {
   step: number
   answers: Record<number, string>
   revision: number
+  feedback?: { position: number; correct: string; explanation: string }[]
 }
 interface Progress { completed: number; lessons: Checkpoint[] }
 const endpoint = '/learning-progress/a1'
@@ -46,15 +47,16 @@ export function useLessonProgress() {
   }, [userId, reload])
 
   const data = snapshot?.userId === userId ? snapshot?.data : undefined
-  async function save(lesson: number, step: number, answers: Record<number,string>) {
-    if (!userId || !data || pending.current) return
+  async function save(lesson: number, step: number, answers: Record<number,string>, submit = false) {
+    if (!userId || !data || pending.current) return false
     pending.current = true
     setSaving(true)
     const revision = data.lessons.find(row => row.lesson === lesson)?.revision ?? 0
     try {
-      const result = await api.put<Progress>(endpoint + '/' + lesson, { step, answers, revision })
+      const result = await api.put<Progress>(endpoint + '/' + lesson, { step, answers, revision, submit })
       setSnapshot({ userId, data: result.data })
       setError('')
+      return true
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.status === 409) {
         retry()
@@ -62,6 +64,7 @@ export function useLessonProgress() {
       } else {
         setError('Chưa lưu được thay đổi. Hãy thử lại thao tác vừa rồi.')
       }
+      return false
     } finally {
       pending.current = false
       setSaving(false)

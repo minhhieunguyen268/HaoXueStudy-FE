@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Alert, Button, ConfigProvider, Input, Select, Spin, Tag } from 'antd'
 import { BookOpen, ChevronLeft, ChevronRight, Search } from 'lucide-react'
 import AppLayout from '../../../shared/components/AppLayout'
@@ -32,6 +32,8 @@ function VocabularyPage() {
   const [query, setQuery] = useState('')
   const [searchParams] = useSearchParams()
   const requestedLesson = Number(searchParams.get('lesson'))
+  const fromLesson = searchParams.get('fromLesson') === '1'
+    && Number.isInteger(requestedLesson) && requestedLesson >= 1 && requestedLesson <= BOOK_ONE.lessonCount
   const [selectedLesson, setSelectedLesson] = useState(
     Number.isInteger(requestedLesson) && requestedLesson >= 1 && requestedLesson <= BOOK_ONE.lessonCount ? requestedLesson : 1,
   )
@@ -113,6 +115,7 @@ function VocabularyPage() {
     <AppLayout>
       <main className="vocabulary-page">
         <div className="page-container vocabulary-content">
+          {fromLesson && <Link className="vocab-book-label" to={'/lession/a1/' + requestedLesson}>← Quay lại bài {String(requestedLesson).padStart(2, '0')}</Link>}
           <header className="vocab-header">
             <div>
               <span className="vocab-book-label"><BookOpen size={16} aria-hidden="true" /> Tiếng Trung phồn thể</span>

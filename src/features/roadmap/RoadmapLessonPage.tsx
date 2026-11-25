@@ -1,5 +1,6 @@
+import api from '../../shared/lib/api'
 import ProgressStatus from './ProgressStatus'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArrowRight, BookOpen } from 'lucide-react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import AppLayout from '../../shared/components/AppLayout'
@@ -7,6 +8,7 @@ import SpeakButton from '../vocabulary/components/SpeakButton'
 import { useLessonProgress } from './lessonProgress'
 import { useCourseGrammar, type GrammarExample, type GrammarPoint } from './useCourseGrammar'
 import './roadmap-lesson.css'
+import LessonDialogues from './LessonDialogues'
 
 function getExamples(point: GrammarPoint): GrammarExample[] {
   if (point.details?.examples.length) return point.details.examples
@@ -19,15 +21,31 @@ function getExamples(point: GrammarPoint): GrammarExample[] {
   }))
 }
 
+const choices = ['A', 'B', 'C', 'D'] as const
+type Choice = typeof choices[number]
+type Question = Record<Choice, string> & { position: number; difficulty: string; prompt: string }
+type Section = 'vocab' | 'dialogues' | 'grammar' | 'practice'
+
 function Lesson({ number }: { number: number }) {
   const label = 'Bài ' + String(number).padStart(2, '0')
   const { grammar, error } = useCourseGrammar()
   const points = grammar?.filter((point) => Number(point.lessonNumber) === number) ?? []
   const { completed, lessons, save, saving, ready, error: progressError, retry } = useLessonProgress()
   const checkpoint = lessons.find(row => row.lesson === number)
-  const answers = checkpoint?.answers ?? {}
+  const answers = Object.fromEntries(Object.entries(checkpoint?.answers ?? {}).filter(([position, value]) =>
+    Number(position) > 0 && choices.includes(value as Choice),
+  ))
+  const feedback = checkpoint?.feedback
+  const [questions, setQuestions] = useState<Question[]>()
+  const [quizError, setQuizError] = useState(false)
+  const [quizRetry, setQuizRetry] = useState(0)
   const step = checkpoint?.step ?? 0
-  const setStep = (next: number) => save(number, next, answers)
+  const [selectedSection, setSelectedSection] = useState<Section | null>(null)
+  const vocabularyReviewed = !!checkpoint || number <= completed
+  const practicing = points.length > 0 && step === points.length
+  const currentSection = selectedSection ?? (practicing ? 'practice' : vocabularyReviewed ? 'grammar' : 'vocab')
+  const grammarStep = practicing ? points.length - 1 : step
+  const point = points[grammarStep]
   const sectionHeading = useRef<HTMLHeadingElement>(null)
   const previousStep = useRef(step)
   useEffect(() => {
@@ -35,12 +53,29 @@ function Lesson({ number }: { number: number }) {
     previousStep.current = step
   }, [step])
 
-  const point = points[step]
-  const practicing = points.length > 0 && step === points.length
-  const answered = Object.keys(answers).length
-  const score = points.filter((point, index) => answers[index] === point.pattern).length
+  useEffect(() => {
+    if (!practicing) return
+    const controller = new AbortController()
+    api.get<Question[]>(`/learning-progress/a1/${number}/quiz`, { signal: controller.signal })
+      .then(({ data }) => { if (!controller.signal.aborted) { setQuestions(data); setQuizError(false) } })
+      .catch(() => { if (!controller.signal.aborted) setQuizError(true) })
+    return () => controller.abort()
+  }, [number, practicing, quizRetry])
+
+  const answered = questions?.filter(question => answers[question.position]).length ?? 0
+  const score = feedback?.filter(item => answers[item.position] === item.correct).length ?? 0
   if (!ready) return <ProgressStatus error={progressError} retry={retry} />
   if (number > completed + 1) return <Navigate to={'/lession/a1/' + (completed + 1)} replace />
+
+  async function confirmVocabulary() {
+    if (vocabularyReviewed || await save(number, 0, {})) setSelectedSection('dialogues')
+  }
+
+  async function moveGrammar(next: number) {
+    if (next === step || await save(number, next, answers)) {
+      setSelectedSection(next === points.length ? 'practice' : 'grammar')
+    }
+  }
 
   function choose(index: number, pattern: string) {
     const next = { ...answers, [index]: pattern }
@@ -65,29 +100,35 @@ function Lesson({ number }: { number: number }) {
             </div>
           </header>
 
-          <section id="lesson-vocab" className="lesson-card lesson-intro">
-            <div>
-              <h2>Bắt đầu với từ mới</h2>
-              <p>Nghe và đọc lại từ mới, rồi thử đặt một câu với cấu trúc bên dưới. Sau đó làm bài luyện tập để kiểm tra.</p>
-            </div>
-              <Link className="lesson-button primary" to={'/vocabulary?lesson=' + number}>Học từ vựng {label.toLowerCase()} <ArrowRight size={16} aria-hidden="true" /></Link>
-          </section>
-
           <div className="lesson-layout">
             <nav className="lesson-steps" aria-label="Các bước học">
               <h2>Nội dung bài học</h2>
               <ol>
-                <li><a href="#lesson-vocab"><b>1</b>Từ mới</a></li>
-                <li><a href="#lesson-grammar" aria-current={!practicing ? 'step' : undefined} onClick={() => { if (practicing) setStep(points.length - 1) }}><b>2</b>Cấu trúc và ví dụ</a></li>
-                <li>{practicing ? <a href="#lesson-practice" aria-current="step"><b>3</b>Luyện tập</a> : <span className="lesson-step-pending"><b>3</b>Luyện tập</span>}</li>
+                <li><button type="button" aria-current={currentSection === 'vocab' ? 'step' : undefined} onClick={() => setSelectedSection('vocab')}><b>1</b>Từ mới</button></li>
+                <li><button type="button" disabled={!vocabularyReviewed || saving} aria-current={currentSection === 'dialogues' ? 'step' : undefined} onClick={() => setSelectedSection('dialogues')}><b>2</b>Hội thoại</button></li>
+                <li><button type="button" disabled={!vocabularyReviewed || saving} aria-current={currentSection === 'grammar' ? 'step' : undefined} onClick={() => setSelectedSection('grammar')}><b>3</b>Cấu trúc và ví dụ</button></li>
+                <li><button type="button" disabled={!practicing || saving} aria-current={currentSection === 'practice' ? 'step' : undefined} onClick={() => setSelectedSection('practice')}><b>4</b>Kiểm tra</button></li>
               </ol>
             </nav>
 
             <div className="lesson-main">
               {progressError && <p role="alert" className="lesson-note error">{progressError}</p>}
+              {currentSection === 'vocab' && <section className="lesson-card lesson-intro">
+                <div>
+                  <h2>Học từ vựng trước</h2>
+                  <p>Mở trang Từ vựng của {label.toLowerCase()} để nghe phát âm, đọc nghĩa và xem ví dụ. Khi ôn xong, quay lại đây để tiếp tục với Hội thoại và Ngữ pháp.</p>
+                </div>
+                <div className="lesson-vocab-actions">
+                  <Link className="lesson-button primary" to={`/vocabulary?lesson=${number}&fromLesson=1`}>Mở từ vựng {label.toLowerCase()} <ArrowRight size={16} aria-hidden="true" /></Link>
+                  <button className="lesson-button" type="button" disabled={saving} onClick={confirmVocabulary}>{vocabularyReviewed ? 'Sang hội thoại' : 'Đã học từ vựng · Sang hội thoại'}</button>
+                </div>
+              </section>}
+              {currentSection === 'dialogues' && <>
+                <LessonDialogues lesson={number} />
+                <div className="lesson-footer"><button type="button" className="lesson-button primary" onClick={() => setSelectedSection('grammar')}>Sang ngữ pháp →</button></div>
+              </>}
 
-
-              {!practicing && <section id="lesson-grammar" className="lesson-section">
+              {currentSection === 'grammar' && <section id="lesson-grammar" className="lesson-section">
                 <h2 ref={sectionHeading} tabIndex={-1}>Cấu trúc và ví dụ</h2>
                 {error ? <p className="lesson-note error" role="alert">Không tải được ngữ pháp. Hãy tải lại trang để thử lại.</p>
                   : !grammar ? <p className="lesson-note" role="status">Đang tải ngữ pháp…</p>
@@ -95,7 +136,7 @@ function Lesson({ number }: { number: number }) {
 
                 {point && (
                   <article key={step} className="lesson-card lesson-grammar">
-                    <div className="lesson-counter"><small>Cấu trúc {step + 1} / {points.length}</small><progress value={step + 1} max={points.length} aria-label="Vị trí cấu trúc trong bài" /></div>
+                    <div className="lesson-counter"><small>Cấu trúc {grammarStep + 1} / {points.length}</small><progress value={grammarStep + 1} max={points.length} aria-label="Vị trí cấu trúc trong bài" /></div>
                     <h3>{point.title}</h3>
                     {point.details?.englishTitle && <small lang="en">{point.details.englishTitle}</small>}
                     <h4>Công thức</h4>
@@ -121,59 +162,67 @@ function Lesson({ number }: { number: number }) {
                       ))}
                     </ul>
                     <div className="lesson-footer">
-                      <button type="button" className="lesson-button" disabled={saving || step === 0} onClick={() => setStep(step - 1)}>Quay lại</button>
-                      <button type="button" disabled={saving} className="lesson-button primary" onClick={() => setStep(step + 1)}>
-                        {step + 1 === points.length ? 'Bắt đầu luyện tập' : 'Cấu trúc tiếp theo →'}
+                      <button type="button" className="lesson-button" disabled={saving || grammarStep === 0} onClick={() => moveGrammar(grammarStep - 1)}>Quay lại</button>
+                      <button type="button" disabled={saving} className="lesson-button primary" onClick={() => moveGrammar(grammarStep + 1)}>
+                        {grammarStep + 1 === points.length ? 'Làm bài kiểm tra' : 'Cấu trúc tiếp theo →'}
                       </button>
                     </div>
                   </article>
                 )}
               </section>}
 
-              {practicing && (
+              {currentSection === 'practice' && practicing && (
                 <section id="lesson-practice" className="lesson-section">
                   <div className="lesson-practice-head">
                     <div>
-                      <h2 ref={sectionHeading} tabIndex={-1}>Luyện tập</h2>
-                      <p>Chọn cấu trúc phù hợp cho từng câu. Trả lời đủ các câu để hoàn thành bài.</p>
+                      <h2 ref={sectionHeading} tabIndex={-1}>Kiểm tra cuối bài</h2>
+                      {questions && questions.length > 0 && <p>Trả lời đủ {questions.length} câu và đạt ít nhất {Math.ceil(questions.length * 0.7)}/{questions.length} để mở bài tiếp theo.</p>}
                     </div>
-                    <div className="lesson-score" aria-live="polite">
-                      <strong>{score}/{points.length}</strong>
-                      <small>đúng · đã trả lời {answered}/{points.length}</small>
-                    </div>
+                    {questions && questions.length > 0 && <div className="lesson-score" aria-live="polite">
+                      <strong>{feedback ? score : answered}/{questions.length}</strong>
+                      <small>{feedback ? 'câu đúng' : 'câu đã trả lời'}</small>
+                    </div>}
                   </div>
 
-                  {points.map((point, index) => {
-                    const alternatives = [...new Set([...points, ...(grammar ?? [])].map((item) => item.pattern))]
-                      .filter((pattern) => pattern && pattern !== point.pattern).slice(0, 2)
-                    alternatives.splice(index % 3, 0, point.pattern)
-                    const chosen = answers[index]
-                    const correct = chosen === point.pattern
+                  {quizError ? <p className="lesson-note error" role="alert">Chưa tải được câu hỏi. <button type="button" onClick={() => setQuizRetry(value => value + 1)}>Thử lại</button></p>
+                    : !questions ? <p role="status">Đang tải câu hỏi…</p>
+                    : questions.length === 0 && <p className="lesson-note">Bài kiểm tra đang được chuẩn bị.</p>}
+
+                  {questions?.map(({ position, difficulty, prompt, ...options }) => {
+                    const chosen = answers[position]
+                    const result = feedback?.find(item => item.position === position)
                     return (
-                      <article className="lesson-card lesson-question" key={index}>
-                        <h3><span>{index + 1}</span>{point.description}</h3>
+                      <article className="lesson-card lesson-question" key={position}>
+                        <small>{difficulty}</small>
+                        <h3><span>{position}</span>{prompt}</h3>
                         <div className="lesson-options">
-                          {alternatives.map((pattern) => {
-                            const state = !chosen ? '' : pattern === point.pattern ? 'correct' : pattern === chosen ? 'wrong' : ''
-                            return (
-                              <button key={pattern} disabled={saving} type="button" lang="zh-TW" className={state} aria-pressed={chosen === pattern} onClick={() => choose(index, pattern)}>
-                                {pattern}
-                              </button>
-                            )
-                          })}
+                          {choices.map(choice => (
+                            <button key={choice} type="button" disabled={saving || !!feedback} aria-pressed={chosen === choice}
+                              className={result?.correct === choice ? 'correct' : result && chosen === choice ? 'wrong' : ''}
+                              onClick={() => choose(position, choice)}>
+                              <strong>{choice}.</strong> {options[choice]}
+                            </button>
+                          ))}
                         </div>
-                        {chosen && (
-                          <p className={'lesson-feedback ' + (correct ? 'ok' : 'no')} role="status">
-                            <b>{correct ? 'Chính xác!' : 'Chưa đúng. Đáp án: ' + point.pattern}</b>
-                            <span>Ví dụ: <span lang="zh-TW">{getExamples(point)[0]?.text}</span></span>
-                          </p>
-                        )}
+                        {result && <div className={'lesson-feedback ' + (result.correct === chosen ? 'ok' : 'no')}>
+                          <b>{result.correct === chosen ? 'Chính xác' : 'Đáp án đúng là ' + result.correct}</b>
+                          <span>{result.explanation}</span>
+                        </div>}
                       </article>
                     )
                   })}
 
+                  {feedback && <p className="lesson-note" role="status">
+                    {score >= Math.ceil(feedback.length * 0.7)
+                      ? 'Bạn đã vượt qua bài kiểm tra.'
+                      : 'Bạn chưa đạt. Xem phần giải thích rồi bấm Làm lại để thử lần nữa.'}
+                  </p>}
+
                   <div className="lesson-footer">
-                    <button type="button" disabled={saving} className="lesson-button" onClick={() => save(number, step, {})}>Làm lại</button>
+                    <button type="button" disabled={saving || !answered} className="lesson-button" onClick={() => save(number, step, {})}>Làm lại</button>
+                    {!feedback && <button type="button" className="lesson-button primary"
+                      disabled={saving || !questions?.length || answered !== questions.length}
+                      onClick={() => save(number, step, answers, true)}>Nộp bài</button>}
                     {completed >= number
                       ? <Link className="lesson-button primary" to={number < 15 ? '/lession/a1/' + (number + 1) : '/lession/a1'}>{number < 15 ? 'Bài tiếp theo →' : 'Hoàn thành A1 · Về danh sách bài'}</Link>
                       : <button type="button" className="lesson-button" disabled>{number < 15 ? 'Bài tiếp theo →' : 'Hoàn thành A1'}</button>}

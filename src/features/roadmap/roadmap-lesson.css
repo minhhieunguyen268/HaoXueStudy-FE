@@ -37,8 +37,8 @@
 .lesson-layout { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 24px; align-items: start; }
 .lesson-steps { position: sticky; top: 16px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 14px; min-width: 0; }
 .lesson-steps ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; border-left: 2px solid var(--line); }
-.lesson-steps a { display: flex; align-items: center; gap: 10px; padding: 8px 12px; margin-left: -2px; border-left: 2px solid transparent; color: var(--ink-soft); text-decoration: none; font-weight: 500; }
-.lesson-steps a:hover { color: var(--ink); border-left-color: var(--ink); }
+.lesson-steps button { display: flex; align-items: center; gap: 10px; padding: 8px 12px; width: 100%; text-align: left; background: transparent; border: 0; margin-left: -2px; border-left: 2px solid transparent; color: var(--ink-soft); text-decoration: none; font-weight: 500; }
+.lesson-steps button:hover:not(:disabled) { color: var(--ink); border-left-color: var(--ink); }
 .lesson-steps b { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; background: var(--jade-soft); color: var(--jade); font-size: 12px; }
 .lesson-main { display: grid; gap: 28px; min-width: 0; scroll-behavior: smooth; }
 .lesson-section { display: grid; gap: 14px; scroll-margin-top: 16px; }
@@ -55,7 +55,6 @@
 .lesson-button { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 0 18px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font: 600 14px var(--font-ui); text-decoration: none; cursor: pointer; }
 .lesson-button:hover { border-color: var(--ink); }
 .lesson-button:disabled { opacity: .55; cursor: default; border-color: var(--line); }
-.lesson-step-pending { display: flex; align-items: center; gap: 10px; padding: 8px 12px; color: var(--ink-soft); white-space: nowrap; }
 .lesson-button.primary { background: var(--ink); border-color: var(--ink); color: #fff; }
 .lesson-button.primary:hover { background: #0f1a33; }
 
@@ -105,14 +104,25 @@
   .lesson-layout { grid-template-columns: 1fr; gap: 16px; }
   .lesson-steps { position: static; }
   .lesson-steps ol { display: flex; border-left: 0; gap: 8px; overflow-x: auto; }
-  .lesson-steps a { margin: 0; border: 1px solid var(--line); border-radius: 99px; background: var(--card); white-space: nowrap; padding: 6px 12px; }
+  .lesson-steps button { margin: 0; border: 1px solid var(--line); border-radius: 99px; background: var(--card); white-space: nowrap; padding: 6px 12px; }
   .lesson-header h1 { font-size: 28px; }
   .lesson-course-progress { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { .lesson-main { scroll-behavior: auto; } }
 
+.lesson-dialogue summary { font-weight: 700; cursor: pointer; }
+.lesson-dialogue-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.lesson-dialogue-actions button { gap: 7px; }
+.lesson-dialogue-lines { display: grid; gap: 6px; padding: 0; margin: 12px 0 0; list-style: none; }
+.lesson-dialogue-lines li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: start; background: var(--paper); padding: 12px; border-radius: 10px; }
+.lesson-dialogue-highlight { background: #ffe39a; color: #2d2718; border-radius: 3px; font: inherit; }
+.lesson-dialogue-lines small { font-weight: 700; color: var(--ink-soft); }
+.lesson-dialogue-lines p[lang='zh-TW'] { font-family: var(--font-zh); font-size: 20px; font-weight: 500; line-height: 1.5; padding-block: 4px; }
+.lesson-dialogue-pinyin { color: var(--jade); overflow-wrap: anywhere; }
+.lesson-dialogue-lines button { padding-inline: 10px; }
+
 .lesson-steps h2 { font-size: 16px; margin-bottom: 12px; }
-.lesson-steps a[aria-current="step"] { color: var(--ink); background: var(--jade-soft); border-left-color: var(--jade); border-radius: 8px; }
+.lesson-steps button[aria-current="step"] { color: var(--ink); background: var(--jade-soft); border-left-color: var(--jade); border-radius: 8px; }
 .lesson-card.lesson-intro { background: repeating-radial-gradient(ellipse at 95% 160%, transparent 0 32px, #d9eccb15 33px 34px, transparent 35px 50px), #194d43; color: #fffaf0; }
 .lesson-intro h2 { font-size: clamp(20px, 2.3vw, 26px); color: inherit; }
 .lesson-intro p { color: #d2e2d8; }
@@ -134,3 +144,8 @@
   .lesson-steps ol > li { flex-shrink: 0; }
   .lesson-steps h2 { margin-bottom: 8px; }
 }
+
+.lesson-steps button:disabled { opacity: .6; cursor: default; }
+.lesson-card.lesson-intro { display: flex; }
+.lesson-vocab-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.lesson-card.lesson-dialogue { display: block; }
